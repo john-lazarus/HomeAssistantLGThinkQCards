@@ -1,0 +1,8 @@
+{
+  "name": "Home Assistant LG ThinQ Cards",
+  "content_in_root": false,
+  "filename": "dist/homeassistant-lg-thinq-cards.js",
+  "render_readme": true,
+  "zip_release": false,
+  "homeassistant": "2023.12.0"
+}
