@@ -1,4 +1,4 @@
-const VERSION = "0.4.2";
+const VERSION = "0.4.3";
 
 /* eslint-disable no-console */
 console.info(
@@ -811,24 +811,22 @@ const APPLIANCES = {
 	        background-size: 150% 150%;
 	      }
 
-	      .lg-thinq--active .lg-thinq__hero {
-	        animation: lg-thinq-hero-shift 9s ease-in-out infinite;
-	      }
+      .lg-thinq--active .lg-thinq__hero {
+        animation: lg-thinq-hero-shift 6s ease-in-out infinite;
+      }
 
-	      .lg-thinq__hero-icon {
-	        display: grid;
-	        place-items: center;
-	        width: 64px;
-	        height: 64px;
-	        border-radius: 16px;
-	        background: rgba(255, 255, 255, 0.18);
-	      }
+      .lg-thinq__hero-icon {
+        display: grid;
+        place-items: center;
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.18);
+      }
 
-	      .lg-thinq--active .lg-thinq__hero-icon {
-	        animation: lg-thinq-icon-pop 2.4s ease-in-out infinite;
-	      }
-
-	      .lg-thinq__hero-icon ha-icon {
+      .lg-thinq--active .lg-thinq__hero-icon {
+        animation: lg-thinq-icon-pop 1.8s ease-in-out infinite;
+      }	      .lg-thinq__hero-icon ha-icon {
 	        --mdc-icon-size: 36px;
 	        color: #fff;
 	      }
@@ -843,40 +841,38 @@ const APPLIANCES = {
 	        font-weight: 500;
 	      }
 
-	      .lg-thinq__status--active {
-	        animation: lg-thinq-status-pulse 2.6s ease-in-out infinite;
-	      }
+      .lg-thinq__status--active {
+        animation: lg-thinq-status-pulse 2s ease-in-out infinite;
+      }
 
-	      .lg-thinq__substatus {
-	        font-size: 0.85rem;
-	        opacity: 0.85;
-	      }
+      .lg-thinq__substatus {
+        font-size: 0.85rem;
+        opacity: 0.85;
+      }
 
-	      .lg-thinq__progress {
-	        padding: 16px 20px 8px;
-	      }
+      .lg-thinq__progress {
+        padding: 16px 20px 8px;
+      }
 
-	      .lg-thinq__progress-track {
-	        position: relative;
-	        width: 100%;
-	        height: 8px;
-	        border-radius: 999px;
-	        background: rgba(0, 0, 0, 0.08);
-	        overflow: hidden;
-	      }
+      .lg-thinq__progress-track {
+        position: relative;
+        width: 100%;
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+      }
 
-	      .lg-thinq__progress-value {
-	        height: 100%;
-	        border-radius: inherit;
-	        background: linear-gradient(135deg, var(--lg-accent-start), var(--lg-accent-end));
-	        transition: width 0.35s ease;
-	      }
+      .lg-thinq__progress-value {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(135deg, var(--lg-accent-start), var(--lg-accent-end));
+        transition: width 0.35s ease;
+      }
 
-	      .lg-thinq--active .lg-thinq__progress-value {
-	        animation: lg-thinq-progress-flow 2.2s linear infinite;
-	      }
-
-	      .lg-thinq__progress-label {
+      .lg-thinq--active .lg-thinq__progress-value {
+        animation: lg-thinq-progress-flow 1.5s linear infinite;
+      }	      .lg-thinq__progress-label {
 	        margin-top: 8px;
 	        font-size: 0.85rem;
 	        color: var(--secondary-text-color);
@@ -899,11 +895,9 @@ const APPLIANCES = {
 	        font-weight: 500;
 	      }
 
-	      .lg-thinq--active .lg-thinq__chip--active {
-	        animation: lg-thinq-chip-pop 3.2s ease-in-out infinite;
-	      }
-
-	      .lg-thinq__chip ha-icon {
+      .lg-thinq--active .lg-thinq__chip--active {
+        animation: lg-thinq-chip-pop 2.5s ease-in-out infinite;
+      }	      .lg-thinq__chip ha-icon {
 	        --mdc-icon-size: 18px;
 	      }
 
