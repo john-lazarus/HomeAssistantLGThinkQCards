@@ -1,4 +1,4 @@
-const VERSION = "0.5.2";
+const VERSION = "0.5.3";
 
 /* eslint-disable no-console */
 console.info(
@@ -20,7 +20,7 @@ if (!html || !css) {
 	throw new Error("Lit helpers unavailable: ensure Home Assistant 2023.10+ is running");
 }
 
-const UNAVAILABLE = new Set(["unknown", "unavailable", "none", ""]);
+const UNAVAILABLE = new Set(["unknown", "unavailable"]);
 const DEFAULT_ACTIVE_STATES = ["on", "true", "open", "running", "active", "enabled", "start", "started"];
 const PASSIVE_STATES = ["off", "standby", "ready", "idle", "complete", "completed", "done", "finished", "end", "ended", "paused", "pause"];
 
@@ -587,12 +587,23 @@ _buildProgress() {
 		return null;
 	}
 
-	const remainingSeconds = parseDurationToSeconds(this._stateValue(config.remaining));
-	const totalSeconds = parseDurationToSeconds(this._stateValue(config.total));
-	const percentRaw = Number(this._stateValue(config.percent));
+	const remainingValue = this._stateValue(config.remaining);
+	const totalValue = this._stateValue(config.total);
+	const percentValue = this._stateValue(config.percent);
+
+	if (remainingValue != null && UNAVAILABLE.has(normalize(remainingValue))) {
+		return null;
+	}
+	if (totalValue != null && UNAVAILABLE.has(normalize(totalValue))) {
+		return null;
+	}
+
+	const remainingSeconds = parseDurationToSeconds(remainingValue);
+	const totalSeconds = parseDurationToSeconds(totalValue);
+	const percentRaw = Number(percentValue);
 	let percent = null;
 
-	if (totalSeconds != null && totalSeconds > 0 && remainingSeconds != null) {
+	if (totalSeconds != null && totalSeconds > 0 && remainingSeconds != null && remainingSeconds >= 0) {
 		percent = clamp(((totalSeconds - remainingSeconds) / totalSeconds) * 100, 0, 100);
 	}
 
