@@ -1,4 +1,4 @@
-const VERSION = "0.2.4";
+const VERSION = "0.2.5";
 
 /* eslint-disable no-console */
 console.info(
@@ -22,7 +22,7 @@ if (!html || !css) {
 
 const UNAVAILABLE = new Set(["unknown", "unavailable"]);
 const DEFAULT_ACTIVE_STATES = ["on", "true", "open", "running", "active", "enabled", "start", "started"];
-const PASSIVE_STATES = ["off", "power off", "standby", "ready", "idle", "complete", "completed", "done", "finished", "end", "ended", "paused", "pause", "stopped", "stop"];
+const PASSIVE_STATES = ["off", "power off", "power_off", "standby", "ready", "idle", "complete", "completed", "done", "finished", "end", "ended", "paused", "pause", "stopped", "stop"];
 
 const APPLIANCES = {
 	dishwasher: {
@@ -1075,13 +1075,6 @@ const APPLIANCES = {
 	  _isApplianceActive() {
 	    const statusValue = this._stateValue("status");
 	    const statusNormalized = normalize(statusValue);
-	    
-	    console.log('[LG ThinQ Active Check]', {
-	      statusValue,
-	      statusNormalized,
-	      isInPassiveStates: PASSIVE_STATES.includes(statusNormalized),
-	      passiveStates: PASSIVE_STATES
-	    });
 	    
 	    // Check if status indicates active operation
 	    if (statusNormalized && !UNAVAILABLE.has(statusNormalized)) {
