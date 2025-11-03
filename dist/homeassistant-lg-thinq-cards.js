@@ -1,4 +1,4 @@
-const VERSION = "0.1.5";
+const VERSION = "0.2.0";
 
 /* eslint-disable no-console */
 console.info(
@@ -235,6 +235,457 @@ const APPLIANCES = {
 			freezer_temp: entityMeta("sensor", ["freezer_temperature", "freezer_temp", "temperature_freezer"]),
 			fresh_air_filter: entityMeta("sensor", ["fresh_air_filter"], true),
 			water_filter_state: entityMeta("sensor", ["water_filter_state", "water_filter_usage", "water_filter"], true),
+		},
+	},
+	air_conditioner: {
+		label: "Air Conditioner",
+		icon: "mdi:air-conditioner",
+		accent: { start: "#48c6ef", end: "#6f86d6" },
+		keywords: ["ac", "air_conditioner", "aircon"],
+		defaultPrefixes: ["air_conditioner", "ac"],
+		chips: [
+			chipMeta("power", "mdi:power", { active: "On", inactive: "Off" }),
+			chipMeta("energy_saving", "mdi:leaf", { active: "Eco mode" }, { tone: "soft", hideInactive: true }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine"),
+			detailRow("current_temp", "Current temp", "mdi:thermometer", "temperature"),
+			detailRow("target_temp", "Target temp", "mdi:thermometer", "temperature"),
+			detailRow("humidity", "Humidity", "mdi:water-percent", "text", { optional: true }),
+			detailRow("air_quality", "Air quality", "mdi:air-filter", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			power: entityMeta("switch", ["power"], true),
+			energy_saving: entityMeta("switch", ["energy_saving"], true),
+			current_temp: entityMeta("sensor", ["current_temperature", "temperature"], true),
+			target_temp: entityMeta("sensor", ["target_temperature"], true),
+			humidity: entityMeta("sensor", ["humidity"], true),
+			air_quality: entityMeta("sensor", ["air_quality", "overall_air_quality"], true),
+		},
+	},
+	air_purifier: {
+		label: "Air Purifier",
+		icon: "mdi:air-purifier",
+		accent: { start: "#a8edea", end: "#fed6e3" },
+		keywords: ["air_purifier", "purifier"],
+		defaultPrefixes: ["air_purifier", "purifier"],
+		chips: [
+			chipMeta("power", "mdi:power", { active: "On", inactive: "Off" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("mode", "Mode", "mdi:tune", "text", { optional: true }),
+			detailRow("air_quality", "Air quality", "mdi:air-filter", "text", { optional: true }),
+			detailRow("pm25", "PM2.5", "mdi:molecule", "text", { optional: true }),
+			detailRow("filter_life", "Filter life", "mdi:air-filter", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			power: entityMeta("switch", ["power"], true),
+			mode: entityMeta("sensor", ["operating_mode"], true),
+			air_quality: entityMeta("sensor", ["air_quality", "overall_air_quality"], true),
+			pm25: entityMeta("sensor", ["pm2_5", "pm25"], true),
+			filter_life: entityMeta("sensor", ["filter_remaining"], true),
+		},
+	},
+	air_purifier_fan: {
+		label: "Air Purifier Fan",
+		icon: "mdi:fan",
+		accent: { start: "#fbc2eb", end: "#a6c1ee" },
+		keywords: ["air_purifier_fan", "purifier_fan"],
+		defaultPrefixes: ["air_purifier_fan"],
+		chips: [
+			chipMeta("power", "mdi:power", { active: "On", inactive: "Off" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("mode", "Mode", "mdi:tune", "text", { optional: true }),
+			detailRow("speed", "Speed", "mdi:speedometer", "text", { optional: true }),
+			detailRow("air_quality", "Air quality", "mdi:air-filter", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			power: entityMeta("switch", ["power"], true),
+			mode: entityMeta("sensor", ["operating_mode"], true),
+			speed: entityMeta("sensor", ["speed"], true),
+			air_quality: entityMeta("sensor", ["air_quality", "overall_air_quality"], true),
+		},
+	},
+	ceiling_fan: {
+		label: "Ceiling Fan",
+		icon: "mdi:ceiling-fan",
+		accent: { start: "#fa709a", end: "#fee140" },
+		keywords: ["ceiling_fan", "fan"],
+		defaultPrefixes: ["ceiling_fan"],
+		chips: [
+			chipMeta("power", "mdi:power", { active: "On", inactive: "Off" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("speed", "Speed", "mdi:speedometer", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			power: entityMeta("switch", ["power"], true),
+			speed: entityMeta("sensor", ["speed"], true),
+		},
+	},
+	cooktop: {
+		label: "Cooktop",
+		icon: "mdi:stove",
+		accent: { start: "#ff9a56", end: "#ff6a00" },
+		keywords: ["cooktop", "stove"],
+		defaultPrefixes: ["cooktop"],
+		meter: { remaining: "remaining_time", total: "total_time" },
+		chips: [
+			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine"),
+			detailRow("power_level", "Power level", "mdi:fire", "text", { optional: true }),
+			detailRow("remaining_time", "Time left", "mdi:clock-outline", "duration", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"]),
+			power_level: entityMeta("sensor", ["power_level"], true),
+			remaining_time: entityMeta("sensor", ["remaining_time"], true),
+			total_time: entityMeta("sensor", ["total_time"], true),
+			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
+		},
+	},
+	dehumidifier: {
+		label: "Dehumidifier",
+		icon: "mdi:air-humidifier-off",
+		accent: { start: "#89f7fe", end: "#66a6ff" },
+		keywords: ["dehumidifier"],
+		defaultPrefixes: ["dehumidifier"],
+		chips: [
+			chipMeta("power", "mdi:power", { active: "On", inactive: "Off" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("mode", "Mode", "mdi:tune", "text", { optional: true }),
+			detailRow("humidity", "Humidity", "mdi:water-percent", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			power: entityMeta("switch", ["power"], true),
+			mode: entityMeta("sensor", ["operating_mode"], true),
+			humidity: entityMeta("sensor", ["humidity"], true),
+		},
+	},
+	home_brew: {
+		label: "Home Brew",
+		icon: "mdi:beer",
+		accent: { start: "#f7971e", end: "#ffd200" },
+		keywords: ["home_brew", "homebrew", "beer"],
+		defaultPrefixes: ["home_brew", "homebrew"],
+		chips: [],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine"),
+			detailRow("recipe", "Recipe", "mdi:book-open-variant", "text", { optional: true }),
+			detailRow("progress", "Progress", "mdi:percent", "text", { optional: true }),
+			detailRow("duration", "Duration", "mdi:clock-outline", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"]),
+			recipe: entityMeta("sensor", ["homebrew_recipe"], true),
+			progress: entityMeta("sensor", ["recipe_progress"], true),
+			duration: entityMeta("sensor", ["brewing_duration"], true),
+		},
+	},
+	hood: {
+		label: "Hood",
+		icon: "mdi:hvac",
+		accent: { start: "#667eea", end: "#764ba2" },
+		keywords: ["hood", "range_hood", "extractor"],
+		defaultPrefixes: ["hood", "range_hood"],
+		chips: [
+			chipMeta("power", "mdi:power", { active: "On", inactive: "Off" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("fan_speed", "Fan speed", "mdi:fan", "text", { optional: true }),
+			detailRow("light", "Light", "mdi:lightbulb", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			power: entityMeta("switch", ["power"], true),
+			fan_speed: entityMeta("sensor", ["fan"], true),
+			light: entityMeta("sensor", ["light"], true),
+		},
+	},
+	humidifier: {
+		label: "Humidifier",
+		icon: "mdi:air-humidifier",
+		accent: { start: "#4facfe", end: "#00f2fe" },
+		keywords: ["humidifier"],
+		defaultPrefixes: ["humidifier"],
+		chips: [
+			chipMeta("power", "mdi:power", { active: "On", inactive: "Off" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("mode", "Mode", "mdi:tune", "text", { optional: true }),
+			detailRow("humidity", "Humidity", "mdi:water-percent", "text", { optional: true }),
+			detailRow("target_humidity", "Target humidity", "mdi:water-percent", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			power: entityMeta("switch", ["power"], true),
+			mode: entityMeta("sensor", ["operating_mode"], true),
+			humidity: entityMeta("sensor", ["humidity"], true),
+			target_humidity: entityMeta("sensor", ["target_humidity"], true),
+		},
+	},
+	kimchi_refrigerator: {
+		label: "Kimchi Refrigerator",
+		icon: "mdi:fridge-variant",
+		accent: { start: "#fa8bff", end: "#2bd2ff" },
+		keywords: ["kimchi", "kimchi_refrigerator"],
+		defaultPrefixes: ["kimchi_refrigerator"],
+		chips: [
+			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("temperature", "Temperature", "mdi:thermometer", "temperature", { optional: true }),
+			detailRow("fresh_air_filter", "Fresh air filter", "mdi:air-filter", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			door: entityMeta("binary_sensor", ["door"], false, true),
+			temperature: entityMeta("sensor", ["temperature"], true),
+			fresh_air_filter: entityMeta("sensor", ["fresh_air_filter"], true),
+		},
+	},
+	microwave_oven: {
+		label: "Microwave Oven",
+		icon: "mdi:microwave",
+		accent: { start: "#ff6e7f", end: "#bfe9ff" },
+		keywords: ["microwave", "oven"],
+		defaultPrefixes: ["microwave_oven", "microwave"],
+		chips: [],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine"),
+			detailRow("fan", "Fan", "mdi:fan", "text", { optional: true }),
+			detailRow("light", "Light", "mdi:lightbulb", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"]),
+			fan: entityMeta("sensor", ["fan"], true),
+			light: entityMeta("sensor", ["light"], true),
+		},
+	},
+	oven: {
+		label: "Oven",
+		icon: "mdi:stove",
+		accent: { start: "#f83600", end: "#f9d423" },
+		keywords: ["oven"],
+		defaultPrefixes: ["oven"],
+		chips: [
+			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine"),
+			detailRow("temperature", "Temperature", "mdi:thermometer", "temperature", { optional: true }),
+			detailRow("cook_mode", "Cook mode", "mdi:chef-hat", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"]),
+			temperature: entityMeta("sensor", ["temperature"], true),
+			cook_mode: entityMeta("sensor", ["cook_mode"], true),
+			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
+		},
+	},
+	plant_cultivator: {
+		label: "Plant Cultivator",
+		icon: "mdi:sprout",
+		accent: { start: "#56ab2f", end: "#a8e063" },
+		keywords: ["plant", "cultivator"],
+		defaultPrefixes: ["plant_cultivator"],
+		chips: [],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine"),
+			detailRow("temperature", "Temperature", "mdi:thermometer", "temperature", { optional: true }),
+			detailRow("light_intensity", "Light intensity", "mdi:brightness-6", "text", { optional: true }),
+			detailRow("mode", "Mode", "mdi:tune", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"]),
+			temperature: entityMeta("sensor", ["temperature"], true),
+			light_intensity: entityMeta("sensor", ["lighting_intensity"], true),
+			mode: entityMeta("sensor", ["mode"], true),
+		},
+	},
+	robot_cleaner: {
+		label: "Robot Cleaner",
+		icon: "mdi:robot-vacuum",
+		accent: { start: "#00d2ff", end: "#3a47d5" },
+		keywords: ["robot", "vacuum", "cleaner"],
+		defaultPrefixes: ["robot_cleaner", "vacuum"],
+		chips: [],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine"),
+			detailRow("mode", "Mode", "mdi:tune", "text", { optional: true }),
+			detailRow("battery", "Battery", "mdi:battery", "text", { optional: true }),
+			detailRow("running_time", "Running time", "mdi:clock-outline", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"]),
+			mode: entityMeta("sensor", ["operating_mode"], true),
+			battery: entityMeta("sensor", ["battery"], true),
+			running_time: entityMeta("sensor", ["running_time"], true),
+		},
+	},
+	stick_cleaner: {
+		label: "Stick Cleaner",
+		icon: "mdi:broom",
+		accent: { start: "#f2709c", end: "#ff9472" },
+		keywords: ["stick", "cleaner", "vacuum"],
+		defaultPrefixes: ["stick_cleaner"],
+		chips: [],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine"),
+			detailRow("mode", "Mode", "mdi:tune", "text", { optional: true }),
+			detailRow("battery", "Battery", "mdi:battery", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"]),
+			mode: entityMeta("sensor", ["operating_mode"], true),
+			battery: entityMeta("sensor", ["battery"], true),
+		},
+	},
+	styler: {
+		label: "Styler",
+		icon: "mdi:hanger",
+		accent: { start: "#ff0844", end: "#ffb199" },
+		keywords: ["styler"],
+		defaultPrefixes: ["styler"],
+		meter: { remaining: "remaining_time", total: "total_time" },
+		chips: [
+			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine"),
+			detailRow("cycle", "Cycle", "mdi:tune-vertical-variant", "text", { optional: true }),
+			detailRow("remaining_time", "Time left", "mdi:clock-outline", "duration", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"]),
+			cycle: entityMeta("sensor", ["current_cycle"], true),
+			remaining_time: entityMeta("sensor", ["remaining_time"], true),
+			total_time: entityMeta("sensor", ["total_time"], true),
+			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
+		},
+	},
+	system_boiler: {
+		label: "System Boiler",
+		icon: "mdi:water-boiler",
+		accent: { start: "#ee0979", end: "#ff6a00" },
+		keywords: ["boiler", "system_boiler"],
+		defaultPrefixes: ["system_boiler", "boiler"],
+		chips: [
+			chipMeta("power", "mdi:power", { active: "On", inactive: "Off" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("indoor_temp", "Indoor temp", "mdi:thermometer", "temperature", { optional: true }),
+			detailRow("inlet_temp", "Inlet temp", "mdi:thermometer", "temperature", { optional: true }),
+			detailRow("outlet_temp", "Outlet temp", "mdi:thermometer", "temperature", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			power: entityMeta("switch", ["power"], true),
+			indoor_temp: entityMeta("sensor", ["indoor_temperature"], true),
+			inlet_temp: entityMeta("sensor", ["inlet_temperature"], true),
+			outlet_temp: entityMeta("sensor", ["outlet_temperature"], true),
+		},
+	},
+	water_heater: {
+		label: "Water Heater",
+		icon: "mdi:water-boiler",
+		accent: { start: "#fc4a1a", end: "#f7b733" },
+		keywords: ["water_heater", "heater"],
+		defaultPrefixes: ["water_heater"],
+		chips: [
+			chipMeta("power", "mdi:power", { active: "On", inactive: "Off" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("mode", "Mode", "mdi:tune", "text", { optional: true }),
+			detailRow("current_temp", "Current temp", "mdi:thermometer", "temperature", { optional: true }),
+			detailRow("target_temp", "Target temp", "mdi:thermometer", "temperature", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			power: entityMeta("switch", ["power"], true),
+			mode: entityMeta("sensor", ["operating_mode"], true),
+			current_temp: entityMeta("sensor", ["current_temperature"], true),
+			target_temp: entityMeta("sensor", ["target_temperature", "temperature"], true),
+		},
+	},
+	water_purifier: {
+		label: "Water Purifier",
+		icon: "mdi:water-pump",
+		accent: { start: "#00b4db", end: "#0083b0" },
+		keywords: ["water_purifier", "purifier"],
+		defaultPrefixes: ["water_purifier"],
+		chips: [],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("sterilization", "Sterilization", "mdi:bacteria", "text", { optional: true }),
+			detailRow("type", "Type", "mdi:information", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			sterilization: entityMeta("sensor", ["high_temp_sterilization"], true),
+			type: entityMeta("sensor", ["type"], true),
+		},
+	},
+	wine_cellar: {
+		label: "Wine Cellar",
+		icon: "mdi:glass-wine",
+		accent: { start: "#8e2de2", end: "#4a00e0" },
+		keywords: ["wine", "cellar"],
+		defaultPrefixes: ["wine_cellar"],
+		chips: [
+			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("temperature", "Temperature", "mdi:thermometer", "temperature", { optional: true }),
+			detailRow("light", "Light", "mdi:lightbulb", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			door: entityMeta("binary_sensor", ["door"], false, true),
+			temperature: entityMeta("sensor", ["temperature"], true),
+			light: entityMeta("sensor", ["light"], true),
+		},
+	},
+	ventilator: {
+		label: "Ventilator",
+		icon: "mdi:fan",
+		accent: { start: "#90e0ff", end: "#4facfe" },
+		keywords: ["ventilator", "vent"],
+		defaultPrefixes: ["ventilator"],
+		chips: [
+			chipMeta("power", "mdi:power", { active: "On", inactive: "Off" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine", "text", { optional: true }),
+			detailRow("mode", "Mode", "mdi:tune", "text", { optional: true }),
+			detailRow("speed", "Speed", "mdi:speedometer", "text", { optional: true }),
+			detailRow("air_quality", "Air quality", "mdi:air-filter", "text", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"], true),
+			power: entityMeta("switch", ["power"], true),
+			mode: entityMeta("sensor", ["operating_mode"], true),
+			speed: entityMeta("sensor", ["speed"], true),
+			air_quality: entityMeta("sensor", ["air_quality"], true),
 		},
 	},
 };
@@ -898,48 +1349,76 @@ _buildProgress() {
       }
 
       .lg-thinq__progress {
-        padding: 16px 20px 8px;
+        padding: 20px 24px 12px;
       }
 
       .lg-thinq__progress-track {
         position: relative;
         width: 100%;
-        height: 8px;
-        border-radius: 999px;
-        background: rgba(0, 0, 0, 0.08);
+        height: 12px;
+        border-radius: 16px;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.04) 0%,
+          rgba(0, 0, 0, 0.06) 100%
+        );
+        box-shadow: 
+          inset 0 2px 4px rgba(0, 0, 0, 0.08),
+          inset 0 -1px 2px rgba(255, 255, 255, 0.1);
         overflow: hidden;
+        backdrop-filter: blur(10px);
+      }
+
+      .lg-thinq__progress-track::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.2) 50%,
+          transparent 100%
+        );
       }
 
       .lg-thinq__progress-value {
         position: relative;
         height: 100%;
         border-radius: inherit;
-        background: linear-gradient(135deg, var(--lg-accent-start), var(--lg-accent-end));
-        transition: width 0.35s ease;
+        background: linear-gradient(
+          135deg,
+          var(--lg-accent-start) 0%,
+          var(--lg-accent-end) 100%
+        );
+        box-shadow: 
+          0 2px 8px rgba(var(--rgb-primary-color), 0.25),
+          0 1px 3px rgba(0, 0, 0, 0.15),
+          inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        transition: width 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+        overflow: hidden;
       }
 
-      .lg-thinq--active .lg-thinq__progress-value {
-        background: linear-gradient(135deg, var(--lg-accent-start), var(--lg-accent-end));
-        background-size: 200% 200%;
-        animation: lg-thinq-progress-flow 1.5s linear infinite;
-      }
-
-      .lg-thinq--active .lg-thinq__progress-value::before {
+      .lg-thinq__progress-value::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        bottom: 0;
-        background-image: repeating-linear-gradient(
-          45deg,
-          rgba(255, 255, 255, 0.1),
-          rgba(255, 255, 255, 0.1) 10px,
-          rgba(255, 255, 255, 0.2) 10px,
-          rgba(255, 255, 255, 0.2) 20px
+        height: 50%;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.25) 0%,
+          rgba(255, 255, 255, 0.05) 50%,
+          transparent 100%
         );
-        background-size: 28px 28px;
-        animation: lg-thinq-progress-stripes 0.8s linear infinite;
+        border-radius: 16px 16px 0 0;
+      }
+
+      .lg-thinq--active .lg-thinq__progress-value {
+        animation: lg-thinq-progress-glow 2s ease-in-out infinite;
       }
 
       .lg-thinq--active .lg-thinq__progress-value::after {
@@ -949,8 +1428,13 @@ _buildProgress() {
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-        animation: lg-thinq-progress-shimmer 2s linear infinite;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.35) 50%,
+          transparent 100%
+        );
+        animation: lg-thinq-progress-shimmer 2.5s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
       }	      .lg-thinq__progress-label {
 	        margin-top: 8px;
 	        font-size: 0.85rem;
@@ -1064,24 +1548,18 @@ _buildProgress() {
 	        }
 	      }
 
-	      @keyframes lg-thinq-progress-flow {
-	        0% {
-	          filter: brightness(1);
+	      @keyframes lg-thinq-progress-glow {
+	        0%, 100% {
+	          box-shadow: 
+	            0 2px 8px rgba(var(--rgb-primary-color), 0.25),
+	            0 1px 3px rgba(0, 0, 0, 0.15),
+	            inset 0 1px 1px rgba(255, 255, 255, 0.3);
 	        }
 	        50% {
-	          filter: brightness(1.25);
-	        }
-	        100% {
-	          filter: brightness(1);
-	        }
-	      }
-
-	      @keyframes lg-thinq-progress-stripes {
-	        0% {
-	          background-position: 0 0;
-	        }
-	        100% {
-	          background-position: 28px 0;
+	          box-shadow: 
+	            0 3px 12px rgba(var(--rgb-primary-color), 0.4),
+	            0 2px 6px rgba(0, 0, 0, 0.2),
+	            inset 0 1px 1px rgba(255, 255, 255, 0.4);
 	        }
 	      }
 
