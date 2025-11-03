@@ -1,4 +1,4 @@
-const VERSION = "0.1.1";
+const VERSION = "0.1.2";
 
 /* eslint-disable no-console */
 console.info(
@@ -312,6 +312,24 @@ const APPLIANCES = {
 	  if (!raw || UNAVAILABLE.has(normalize(raw))) {
 	    return null;
 	  }
+	  
+	  // Handle "in X minutes/hours" relative timestamp format from Home Assistant
+	  // LG ThinQ TIMESTAMP sensors display as "in X minutes" when formatted
+	  const inFormat = raw.match(/^in\s+(\d+)\s+(minute|minutes|hour|hours)$/i);
+	  if (inFormat) {
+	    const num = Number(inFormat[1]);
+	    const unit = inFormat[2].toLowerCase();
+	    return unit.startsWith('hour') ? num * 3600 : num * 60;
+	  }
+	  
+	  // Handle "XXm" or "XXh" DURATION sensor format
+	  const shortFormat = raw.match(/^(\d+)([hm])$/i);
+	  if (shortFormat) {
+	    const num = Number(shortFormat[1]);
+	    const unit = shortFormat[2].toLowerCase();
+	    return unit === 'h' ? num * 3600 : num * 60;
+	  }
+	  
 	  const hhmm = raw.match(/^(\d{1,2}):(\d{2})$/);
 	  if (hhmm) {
 	    const hours = Number(hhmm[1]);
@@ -623,6 +641,7 @@ _buildProgress() {
 	const totalSeconds = parseDurationToSeconds(totalValue);
 	let percent = null;
 
+	// Progress shows completion: 0% at start, 100% when done
 	if (totalSeconds != null && totalSeconds > 0 && remainingSeconds != null && remainingSeconds >= 0) {
 		percent = clamp(((totalSeconds - remainingSeconds) / totalSeconds) * 100, 0, 100);
 	}
