@@ -17,8 +17,8 @@
 
 1. Install the official [LG ThinQ](https://www.home-assistant.io/integrations/lg_thinq/) integration and confirm your washer/dryer/etc. entities show up in **Developer Tools → States**.
 2. In **HACS → Frontend → ⋮ → Custom repositories**, add `https://github.com/john-lazarus/HomeAssistantLGThinkQCards` (category **Lovelace**).
-3. Install **Home Assistant LG ThinQ Cards** and, when asked for a version, choose `v0.4.2` or later. HACS drops the file in `/config/www/community/HomeAssistantLGThinkQCards/` and creates a resource pointing to `/hacsfiles/HomeAssistantLGThinkQCards/homeassistant-lg-thinq-cards.js`.
-4. Force-refresh your browser (Ctrl+F5 / Cmd+Shift+R). If you see `HomeAssistant LG ThinQ Cards 0.4.2` (or newer) in the dev console, the bundle loaded.
+3. Install **Home Assistant LG ThinQ Cards** and, when asked for a version, choose `v0.5.0` or later. HACS drops the file in `/config/www/community/HomeAssistantLGThinkQCards/` and creates a resource pointing to `/hacsfiles/HomeAssistantLGThinkQCards/homeassistant-lg-thinq-cards.js`.
+4. Force-refresh your browser (Ctrl+F5 / Cmd+Shift+R). If you see `HomeAssistant LG ThinQ Cards 0.5.0` (or newer) in the dev console, the bundle loaded.
 5. In Lovelace, add a **Manual** card with:
 
   ```yaml
@@ -44,7 +44,7 @@ entities:
 ### Troubleshooting checklist
 
 - Resource missing? Visit `https://<ha-host>/hacsfiles/HomeAssistantLGThinkQCards/homeassistant-lg-thinq-cards.js`—you should see the bundle source.
-- Still cached? Append `?v=0.4.2` to the resource URL or hard-reload the browser.
+- Still cached? Append `?v=0.5.0` to the resource URL or hard-reload the browser.
 - Wrong entity match? Pass `appliance: washer` (etc.) or override specific sensors under `entities:`.
 
 ## Features in depth

@@ -1,4 +1,4 @@
-const VERSION = "0.4.3";
+const VERSION = "0.5.0";
 
 /* eslint-disable no-console */
 console.info(
@@ -33,7 +33,7 @@ const APPLIANCES = {
 		defaultPrefixes: ["dishwasher"],
 		meter: { remaining: "remaining_time", total: "initial_time", percent: "progress" },
 		chips: [
-			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }),
+			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 			chipMeta("power", "mdi:power", { active: "Powered", hideInactive: true }),
 			chipMeta("rinse_refill", "mdi:blur", { active: "Rinse aid low", inactive: "Rinse aid ok", hideInactive: true }),
 		],
@@ -76,7 +76,7 @@ const APPLIANCES = {
 		defaultPrefixes: ["washer", "washtower_washer", "washcombo_main"],
 		meter: { remaining: "remaining_time", total: "initial_time", percent: "progress" },
 		chips: [
-			chipMeta("door", "mdi:door", { active: "Door unlocked", inactive: "Door locked" }),
+			chipMeta("door", "mdi:door", { active: "Door unlocked", inactive: "Door locked" }, { hideInactive: true }),
 			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
 		],
 		details: [
@@ -111,7 +111,7 @@ const APPLIANCES = {
 		meter: { remaining: "remaining_time", total: "initial_time", percent: "progress" },
 		chips: [
 			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
-			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }),
+			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 		],
 		details: [
 			detailRow("status", "Status", "mdi:state-machine"),
@@ -133,14 +133,14 @@ const APPLIANCES = {
 		},
 	},
 	washer_combo: {
-		label: "WashTower",
+		label: "Clothes Washer Dryer Combo",
 		icon: "mdi:washing-machine",
 		accent: { start: "#8e2de2", end: "#4a00e0" },
 		keywords: ["washcombo", "washer", "dryer"],
 		defaultPrefixes: ["washcombo_main", "washer_dryer", "washcombo"],
 		meter: { remaining: "remaining_time", total: "initial_time", percent: "progress" },
 		chips: [
-			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }),
+			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
 		],
 		details: [
@@ -170,7 +170,7 @@ const APPLIANCES = {
 		defaultPrefixes: ["washcombo_mini", "mini_washer", "mini"],
 		meter: { remaining: "remaining_time", total: "initial_time", percent: "progress" },
 		chips: [
-			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }),
+			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 		],
 		details: [
 			detailRow("status", "Status", "mdi:state-machine"),
@@ -195,7 +195,7 @@ const APPLIANCES = {
 		keywords: ["fridge", "refrigerator"],
 		defaultPrefixes: ["refrigerator", "fridge"],
 		chips: [
-			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }),
+			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 			chipMeta("express_freeze", "mdi:snowflake", { active: "Express freeze" }, { tone: "soft", hideInactive: true }),
 			chipMeta("express_cool", "mdi:fridge", { active: "Express cool" }, { tone: "soft", hideInactive: true }),
 		],
@@ -382,32 +382,57 @@ const APPLIANCES = {
 	    return { hass: {} };
 	  }
 
-	  constructor() {
-	    super();
-	    this.hass = undefined;
-	    this._config = {};
-	    this._definition = undefined;
-	    this._resolved = {};
-		this._autoPrefix = undefined;
-		this._meterState = { baseline: null, lastRemaining: null };
-	  }
+  constructor() {
+    super();
+    this.hass = undefined;
+    this._config = {};
+    this._definition = undefined;
+    this._resolved = {};
+	this._autoPrefix = undefined;
+	this._meterState = null;
+  }
 
-	  setConfig(config = {}) {
-	    const forced = this.constructor.applianceType;
-	    const requested = config.appliance ?? forced ?? "dishwasher";
-	    const key = String(requested).toLowerCase();
-	    const definition = APPLIANCES[key];
-	    if (!definition) {
-	      throw new Error(`Unsupported appliance type: ${requested}`);
-	    }
-	    this._config = { ...config, appliance: key };
-	    this._definition = definition;
-	    this._resolved = {};
-	    this._autoPrefix = config.entity_prefix ?? undefined;
-		this._meterState = { baseline: null, lastRemaining: null };
-	  }
+  setConfig(config = {}) {
+    const forced = this.constructor.applianceType;
+    const requested = config.appliance ?? forced ?? "dishwasher";
+    const key = String(requested).toLowerCase();
+    const definition = APPLIANCES[key];
+    if (!definition) {
+      throw new Error(`Unsupported appliance type: ${requested}`);
+    }
+    this._config = { ...config, appliance: key };
+    this._definition = definition;
+    this._resolved = {};
+    this._autoPrefix = config.entity_prefix ?? undefined;
+	this._meterState = null;
+  }
 
-	  set hass(value) {
+  _loadMeterState(entityId) {
+    if (!entityId) return { baseline: null, lastRemaining: null };
+    try {
+      const key = `lg-thinq-meter-${entityId}`;
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : { baseline: null, lastRemaining: null };
+    } catch {
+      return { baseline: null, lastRemaining: null };
+    }
+  }
+
+  _saveMeterState(entityId, state) {
+    if (!entityId) return;
+    try {
+      const key = `lg-thinq-meter-${entityId}`;
+      localStorage.setItem(key, JSON.stringify(state));
+    } catch {}
+  }
+
+  _clearMeterState(entityId) {
+    if (!entityId) return;
+    try {
+      const key = `lg-thinq-meter-${entityId}`;
+      localStorage.removeItem(key);
+    } catch {}
+  }	  set hass(value) {
 	    this.__hass = value;
 	    if (!value || !this._definition) {
 	      return;
@@ -576,75 +601,89 @@ const APPLIANCES = {
 		}
 	  }
 
-	_buildProgress() {
-		const config = this._definition.meter;
-		if (!config) {
-			return null;
-		}
-
-		const meterState = this._meterState ?? (this._meterState = { baseline: null, lastRemaining: null });
-		const statusValue = this._stateValue("status");
-		const isActive = isTruthyState(statusValue);
-
-		if (!isActive && meterState.baseline != null) {
-			meterState.baseline = null;
-			meterState.lastRemaining = null;
-		}
-
-		const remainingSeconds = parseDurationToSeconds(this._stateValue(config.remaining));
-		const totalSeconds = parseDurationToSeconds(this._stateValue(config.total));
-		const percentRaw = Number(this._stateValue(config.percent));
-		let percent = null;
-
-		if (totalSeconds != null && totalSeconds > 0 && remainingSeconds != null) {
-			percent = clamp(((totalSeconds - remainingSeconds) / totalSeconds) * 100, 0, 100);
-			meterState.baseline = totalSeconds;
-			meterState.lastRemaining = remainingSeconds;
-		}
-
-		if (percent == null && Number.isFinite(percentRaw)) {
-			percent = clamp(percentRaw, 0, 100);
-			if (remainingSeconds != null && percent > 0 && percent < 100) {
-				const estimated = remainingSeconds / (1 - percent / 100);
-				if (Number.isFinite(estimated) && estimated > 0) {
-					meterState.baseline = estimated;
-				}
-			}
-		}
-
-		if (percent == null && remainingSeconds != null) {
-			if (
-				meterState.baseline == null ||
-				meterState.baseline <= 0 ||
-				(meterState.lastRemaining != null && remainingSeconds > meterState.lastRemaining + 60)
-			) {
-				meterState.baseline = remainingSeconds;
-			} else if (remainingSeconds > meterState.baseline) {
-				meterState.baseline = remainingSeconds;
-			}
-
-			meterState.lastRemaining = remainingSeconds;
-
-			if (meterState.baseline && meterState.baseline > 0) {
-				percent = clamp(((meterState.baseline - remainingSeconds) / meterState.baseline) * 100, 0, 100);
-			}
-		} else if (remainingSeconds == null) {
-			meterState.lastRemaining = null;
-		}
-
-		if (percent == null) {
-			return null;
-		}
-
-		if (remainingSeconds != null && remainingSeconds <= 0) {
-			meterState.baseline = null;
-		}
-
-		const label = remainingSeconds != null ? `${formatDurationShort(remainingSeconds)} left` : null;
-		return { percent, label };
+_buildProgress() {
+	const config = this._definition.meter;
+	if (!config) {
+		return null;
 	}
 
-	  _renderChips() {
+	const remainingEntityId = this._resolved[config.remaining];
+	if (!this._meterState) {
+		this._meterState = this._loadMeterState(remainingEntityId);
+	}
+
+	const statusValue = this._stateValue("status");
+	const isActive = isTruthyState(statusValue);
+	const normalized = normalize(statusValue);
+
+	if (normalized && UNAVAILABLE.has(normalized)) {
+		this._clearMeterState(remainingEntityId);
+		this._meterState = { baseline: null, lastRemaining: null };
+		return null;
+	}
+
+	if (!isActive && this._meterState.baseline != null) {
+		this._clearMeterState(remainingEntityId);
+		this._meterState.baseline = null;
+		this._meterState.lastRemaining = null;
+	}
+
+	const remainingSeconds = parseDurationToSeconds(this._stateValue(config.remaining));
+	const totalSeconds = parseDurationToSeconds(this._stateValue(config.total));
+	const percentRaw = Number(this._stateValue(config.percent));
+	let percent = null;
+
+	if (totalSeconds != null && totalSeconds > 0 && remainingSeconds != null) {
+		percent = clamp(((totalSeconds - remainingSeconds) / totalSeconds) * 100, 0, 100);
+		this._meterState.baseline = totalSeconds;
+		this._meterState.lastRemaining = remainingSeconds;
+		this._saveMeterState(remainingEntityId, this._meterState);
+	}
+
+	if (percent == null && Number.isFinite(percentRaw)) {
+		percent = clamp(percentRaw, 0, 100);
+		if (remainingSeconds != null && percent > 0 && percent < 100) {
+			const estimated = remainingSeconds / (1 - percent / 100);
+			if (Number.isFinite(estimated) && estimated > 0) {
+				this._meterState.baseline = estimated;
+				this._saveMeterState(remainingEntityId, this._meterState);
+			}
+		}
+	}
+
+	if (percent == null && remainingSeconds != null) {
+		if (
+			this._meterState.baseline == null ||
+			this._meterState.baseline <= 0 ||
+			(this._meterState.lastRemaining != null && remainingSeconds > this._meterState.lastRemaining + 60)
+		) {
+			this._meterState.baseline = remainingSeconds;
+		} else if (remainingSeconds > this._meterState.baseline) {
+			this._meterState.baseline = remainingSeconds;
+		}
+
+		this._meterState.lastRemaining = remainingSeconds;
+		this._saveMeterState(remainingEntityId, this._meterState);
+
+		if (this._meterState.baseline && this._meterState.baseline > 0) {
+			percent = clamp(((this._meterState.baseline - remainingSeconds) / this._meterState.baseline) * 100, 0, 100);
+		}
+	} else if (remainingSeconds == null) {
+		this._meterState.lastRemaining = null;
+	}
+
+	if (percent == null) {
+		return null;
+	}
+
+	if (remainingSeconds != null && remainingSeconds <= 0) {
+		this._clearMeterState(remainingEntityId);
+		this._meterState.baseline = null;
+	}
+
+	const label = remainingSeconds != null ? `${formatDurationShort(remainingSeconds)} left` : null;
+	return { percent, label };
+}	  _renderChips() {
 	    const chips = (this._definition.chips ?? [])
 	      .map((chip) => this._renderChip(chip))
 	      .filter(Boolean);
@@ -743,7 +782,25 @@ const APPLIANCES = {
 		const accent = this._definition.accent ?? { start: "#8df427", end: "#4caf50" };
 		const statusValue = this._stateValue("status");
 		const statusNormalized = statusValue != null ? normalize(statusValue) : null;
-		const status = statusNormalized && !UNAVAILABLE.has(statusNormalized) ? prettifyText(statusValue) : null;
+		const isOffline = statusNormalized && UNAVAILABLE.has(statusNormalized);
+
+		if (isOffline) {
+		  return html`
+		    <ha-card class="lg-thinq lg-thinq--offline" style=${`--lg-accent-start:${accent.start}; --lg-accent-end:${accent.end};`}>
+		      <div class="lg-thinq__hero lg-thinq__hero--offline">
+		        <div class="lg-thinq__hero-icon lg-thinq__hero-icon--offline">
+		          <ha-icon icon=${this._definition.icon}></ha-icon>
+		        </div>
+		        <div class="lg-thinq__hero-text">
+		          <div class="lg-thinq__headline">${header}</div>
+		          <div class="lg-thinq__status">Offline</div>
+		        </div>
+		      </div>
+		    </ha-card>
+		  `;
+		}
+
+		const status = statusNormalized ? prettifyText(statusValue) : null;
 		const cycle = this._formatValue({ key: "cycle", format: "text" });
 		const progress = this._buildProgress();
 		const chips = this._renderChips();
@@ -801,6 +858,15 @@ const APPLIANCES = {
 	        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 	      }
 
+	      .lg-thinq--offline .lg-thinq__hero--offline {
+	        background: linear-gradient(135deg, #757575, #9e9e9e);
+	        opacity: 0.7;
+	      }
+
+	      .lg-thinq--offline .lg-thinq__hero-icon--offline {
+	        opacity: 0.6;
+	      }
+
 	      .lg-thinq__hero {
 	        display: flex;
 	        align-items: center;
@@ -822,10 +888,12 @@ const APPLIANCES = {
         height: 64px;
         border-radius: 16px;
         background: rgba(255, 255, 255, 0.18);
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
       }
 
       .lg-thinq--active .lg-thinq__hero-icon {
         animation: lg-thinq-icon-pop 1.8s ease-in-out infinite;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
       }	      .lg-thinq__hero-icon ha-icon {
 	        --mdc-icon-size: 36px;
 	        color: #fff;
@@ -864,6 +932,7 @@ const APPLIANCES = {
       }
 
       .lg-thinq__progress-value {
+        position: relative;
         height: 100%;
         border-radius: inherit;
         background: linear-gradient(135deg, var(--lg-accent-start), var(--lg-accent-end));
@@ -872,6 +941,17 @@ const APPLIANCES = {
 
       .lg-thinq--active .lg-thinq__progress-value {
         animation: lg-thinq-progress-flow 1.5s linear infinite;
+      }
+
+      .lg-thinq--active .lg-thinq__progress-value::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+        animation: lg-thinq-progress-shimmer 2s linear infinite;
       }	      .lg-thinq__progress-label {
 	        margin-top: 8px;
 	        font-size: 0.85rem;
@@ -897,6 +977,7 @@ const APPLIANCES = {
 
       .lg-thinq--active .lg-thinq__chip--active {
         animation: lg-thinq-chip-pop 2.5s ease-in-out infinite;
+        box-shadow: 0 0 12px rgba(var(--rgb-primary-color), 0.3);
       }	      .lg-thinq__chip ha-icon {
 	        --mdc-icon-size: 18px;
 	      }
@@ -989,10 +1070,19 @@ const APPLIANCES = {
 	          filter: brightness(1);
 	        }
 	        50% {
-	          filter: brightness(1.15);
+	          filter: brightness(1.25);
 	        }
 	        100% {
 	          filter: brightness(1);
+	        }
+	      }
+
+	      @keyframes lg-thinq-progress-shimmer {
+	        0% {
+	          left: -100%;
+	        }
+	        100% {
+	          left: 200%;
 	        }
 	      }
 
@@ -1001,7 +1091,7 @@ const APPLIANCES = {
 	          opacity: 1;
 	        }
 	        50% {
-	          opacity: 0.75;
+	          opacity: 0.7;
 	        }
 	      }
 
@@ -1010,7 +1100,7 @@ const APPLIANCES = {
 	          transform: scale(1);
 	        }
 	        50% {
-	          transform: scale(1.04);
+	          transform: scale(1.15);
 	        }
 	      }
 
@@ -1019,7 +1109,7 @@ const APPLIANCES = {
 	          transform: translateY(0);
 	        }
 	        50% {
-	          transform: translateY(-1px);
+	          transform: translateY(-2px);
 	        }
 	      }
 	    `;
