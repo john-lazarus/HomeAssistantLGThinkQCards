@@ -1,4 +1,4 @@
-const VERSION = "0.2.0";
+const VERSION = "0.2.1";
 
 /* eslint-disable no-console */
 console.info(
@@ -1111,7 +1111,15 @@ _buildProgress() {
 		return null;
 	}
 
-	const label = remainingSeconds != null && remainingSeconds > 0 ? `${formatDurationShort(remainingSeconds)} left` : null;
+	let label = null;
+	if (remainingSeconds != null && remainingSeconds > 0) {
+		const timeLabel = formatDurationShort(remainingSeconds);
+		const percentLabel = `${Math.round(percent)}%`;
+		label = `${percentLabel} • ${timeLabel} left`;
+	} else if (percent != null) {
+		label = `${Math.round(percent)}%`;
+	}
+
 	return { percent, label };
 }	  _renderChips() {
 	    const chips = (this._definition.chips ?? [])
@@ -1281,11 +1289,16 @@ _buildProgress() {
 	      .lg-thinq {
 	        padding: 0;
 	        overflow: hidden;
-	        transition: box-shadow 0.4s ease;
+	        transition: box-shadow 0.4s ease, filter 0.3s ease;
 	      }
 
 	      .lg-thinq--active {
 	        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+	      }
+
+	      .lg-thinq:not(.lg-thinq--active) {
+	        filter: grayscale(0.6);
+	        opacity: 0.85;
 	      }
 
 	      .lg-thinq--offline .lg-thinq__hero--offline {

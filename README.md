@@ -1,7 +1,11 @@
 <div align="center">
   <h1>LG ThinQ Lovelace Cards</h1>
   <p>Zero-config Home Assistant cards for LG ThinQ appliances with live progress, smart chips, and polished gradients.</p>
+  
+  <a href="https://www.buymeacoffee.com/trusmith"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support-yellow?style=for-the-badge&logo=buy-me-a-coffee" alt="Buy Me A Coffee"></a>
 </div>
+
+> **⚠️ Alpha Software**: This project is in active development. Minor issues may occur. If you encounter any problems, please [open an issue](https://github.com/john-lazarus/HomeAssistantLGThinkQCards/issues).
 
 ![LG ThinQ card preview](docs/card-preview.png)
 
