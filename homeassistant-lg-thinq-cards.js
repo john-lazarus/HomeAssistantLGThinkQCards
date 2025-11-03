@@ -1,4 +1,4 @@
-const VERSION = "0.1.3";
+const VERSION = "0.1.4";
 
 /* eslint-disable no-console */
 console.info(
@@ -356,8 +356,8 @@ const APPLIANCES = {
 	}
 	  const numeric = Number(raw);
 	  if (!Number.isNaN(numeric)) {
-	    const seconds = numeric >= 3600 ? numeric : numeric * 60;
-	    return seconds >= 0 ? seconds : null;
+	    // Plain numbers from LG ThinQ are in minutes
+	    return numeric * 60;
 	  }
 	  return null;
 	}
