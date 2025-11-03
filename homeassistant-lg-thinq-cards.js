@@ -1,4 +1,4 @@
-const VERSION = "0.5.3";
+const VERSION = "0.5.4";
 
 /* eslint-disable no-console */
 console.info(
@@ -137,7 +137,7 @@ const APPLIANCES = {
 		icon: "mdi:washing-machine",
 		accent: { start: "#8e2de2", end: "#4a00e0" },
 		keywords: ["washcombo", "washer", "dryer"],
-		defaultPrefixes: ["washcombo_main", "washer_dryer", "washcombo"],
+		defaultPrefixes: ["washcombo_main", "washer_dryer", "washcombo", "washerdryer"],
 		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
 		chips: [
 			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
@@ -184,6 +184,34 @@ const APPLIANCES = {
 			remaining_time: entityMeta("sensor", ["remaining_time"]),
 			delayed_start: entityMeta("sensor", ["delayed_start"], true),
 			door: entityMeta("binary_sensor", ["door"], false, true),
+			total_time: entityMeta("sensor", ["total_time"], true),
+			progress: entityMeta("sensor", ["progress"], true),
+		},
+	},
+	washtower: {
+		label: "Washtower",
+		icon: "mdi:washing-machine",
+		accent: { start: "#667eea", end: "#764ba2" },
+		keywords: ["washtower", "tower"],
+		defaultPrefixes: ["washtower"],
+		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
+		chips: [
+			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
+			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
+		],
+		details: [
+			detailRow("status", "Status", "mdi:state-machine"),
+			detailRow("cycle", "Cycle", "mdi:tune-vertical-variant"),
+			detailRow("remaining_time", "Time left", "mdi:clock-outline", "duration"),
+			detailRow("delayed_start", "Delay start", "mdi:clock-alert-outline", "duration", { optional: true }),
+		],
+		entities: {
+			status: entityMeta("sensor", ["current_status"]),
+			cycle: entityMeta("sensor", ["current_cycle"]),
+			remaining_time: entityMeta("sensor", ["remaining_time"]),
+			delayed_start: entityMeta("sensor", ["delayed_start"], true),
+			door: entityMeta("binary_sensor", ["door"], false, true),
+			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
 			total_time: entityMeta("sensor", ["total_time"], true),
 			progress: entityMeta("sensor", ["progress"], true),
 		},
