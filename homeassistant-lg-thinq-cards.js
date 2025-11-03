@@ -1,4 +1,4 @@
-const VERSION = "0.5.0";
+const VERSION = "0.5.1";
 
 /* eslint-disable no-console */
 console.info(
@@ -31,7 +31,7 @@ const APPLIANCES = {
 		accent: { start: "#00b4d8", end: "#0077b6" },
 		keywords: ["dishwasher"],
 		defaultPrefixes: ["dishwasher"],
-		meter: { remaining: "remaining_time", total: "initial_time", percent: "progress" },
+		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
 		chips: [
 			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 			chipMeta("power", "mdi:power", { active: "Powered", hideInactive: true }),
@@ -51,21 +51,21 @@ const APPLIANCES = {
 			detailRow("extra_dry", "Extra dry", "mdi:weather-sunny-alert", "binary", { optional: true, labels: { on: "Enabled", off: "Disabled" } }),
 		],
 		entities: {
-			status: entityMeta("sensor", ["current_status", "current_state", "run_state", "process_state"]),
-			cycle: entityMeta("sensor", ["current_cycle", "current_course", "job_state"]),
-			remaining_time: entityMeta("sensor", ["remaining_time", "time_display", "remain"]),
-			delayed_start: entityMeta("sensor", ["delayed_start", "delay_start", "relative_to_start_wm"], true),
+			status: entityMeta("sensor", ["current_status"]),
+			cycle: entityMeta("sensor", ["current_cycle"]),
+			remaining_time: entityMeta("sensor", ["remaining_time"]),
+			delayed_start: entityMeta("sensor", ["delayed_start"], true),
 			softening_level: entityMeta("sensor", ["softening_level"], true),
 			temperature: entityMeta("sensor", ["target_temperature", "water_temperature"], true),
-			power: entityMeta("switch", ["power", "operation_mode"], true),
-			door: entityMeta("binary_sensor", ["door", "door_open"], false, true),
-			rinse_refill: entityMeta(["binary_sensor", "sensor"], ["rinse_refill_needed", "rinse_refill", "rinse_aid"], true),
-			salt_refill: entityMeta(["binary_sensor", "sensor"], ["salt_refill_needed", "salt_refill"], true),
-			steam_option: entityMeta(["sensor", "switch"], ["steam_option", "steam"], true),
-			dual_zone: entityMeta(["sensor", "switch"], ["dual_zone", "dual_zone_option"], true),
-			extra_dry: entityMeta(["sensor", "switch"], ["extra_dry", "night_dry", "turbo_option"], true),
-			initial_time: entityMeta("sensor", ["initial_time", "total_time", "course_total_time"], true),
-			progress: entityMeta("sensor", ["progress", "completion_rate", "progress_percent"], true),
+			power: entityMeta("switch", ["power"], true),
+			door: entityMeta("binary_sensor", ["door"], false, true),
+			rinse_refill: entityMeta("binary_sensor", ["rinse_refill_needed"], true),
+			salt_refill: entityMeta("binary_sensor", ["salt_refill_needed"], true),
+			steam_option: entityMeta(["sensor", "switch"], ["steam_option"], true),
+			dual_zone: entityMeta(["sensor", "switch"], ["dual_zone"], true),
+			extra_dry: entityMeta(["sensor", "switch"], ["extra_dry"], true),
+			initial_time: entityMeta("sensor", ["total_time"], true),
+			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
 	washer: {
@@ -74,7 +74,7 @@ const APPLIANCES = {
 		accent: { start: "#4ecdc4", end: "#2a9d8f" },
 		keywords: ["washer", "wash"],
 		defaultPrefixes: ["washer", "washtower_washer", "washcombo_main"],
-		meter: { remaining: "remaining_time", total: "initial_time", percent: "progress" },
+		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
 		chips: [
 			chipMeta("door", "mdi:door", { active: "Door unlocked", inactive: "Door locked" }, { hideInactive: true }),
 			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
@@ -89,17 +89,17 @@ const APPLIANCES = {
 			detailRow("cycle_count", "Cycles", "mdi:counter", "number", { optional: true }),
 		],
 		entities: {
-			status: entityMeta("sensor", ["current_status", "current_state", "run_state"]),
-			cycle: entityMeta("sensor", ["current_cycle", "current_course", "job_state"]),
-			remaining_time: entityMeta("sensor", ["remaining_time", "time_display", "remain"]),
-			delayed_start: entityMeta("sensor", ["delayed_start", "delay_start", "relative_to_start_wm"], true),
-			water_temp: entityMeta("sensor", ["water_temp", "water_temperature"], true),
-			spin_speed: entityMeta("sensor", ["spin_speed", "spin_level", "spin"], true),
-			cycle_count: entityMeta("sensor", ["cycle_count", "cycles"], true),
-			door: entityMeta("binary_sensor", ["door", "door_lock"], false, true),
-			remote_start: entityMeta("binary_sensor", ["remote_start", "remote_operation"], true),
-			initial_time: entityMeta("sensor", ["initial_time", "total_time", "course_total_time"], true),
-			progress: entityMeta("sensor", ["progress", "completion_rate", "progress_percent"], true),
+			status: entityMeta("sensor", ["current_status"]),
+			cycle: entityMeta("sensor", ["current_cycle"]),
+			remaining_time: entityMeta("sensor", ["remaining_time"]),
+			delayed_start: entityMeta("sensor", ["delayed_start"], true),
+			water_temp: entityMeta("sensor", ["water_temp"], true),
+			spin_speed: entityMeta("sensor", ["spin_speed"], true),
+			cycle_count: entityMeta("sensor", ["cycles"], true),
+			door: entityMeta("binary_sensor", ["door"], false, true),
+			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
+			initial_time: entityMeta("sensor", ["total_time"], true),
+			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
 	dryer: {
@@ -108,7 +108,7 @@ const APPLIANCES = {
 		accent: { start: "#f4a261", end: "#e76f51" },
 		keywords: ["dryer"],
 		defaultPrefixes: ["dryer", "washtower_dryer"],
-		meter: { remaining: "remaining_time", total: "initial_time", percent: "progress" },
+		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
 		chips: [
 			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
 			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
@@ -121,15 +121,15 @@ const APPLIANCES = {
 			detailRow("dry_level", "Dry level", "mdi:air-filter", "text", { optional: true }),
 		],
 		entities: {
-			status: entityMeta("sensor", ["current_status", "current_state", "run_state"]),
-			cycle: entityMeta("sensor", ["current_cycle", "current_course", "job_state"], true),
-			remaining_time: entityMeta("sensor", ["remaining_time", "time_display", "remain"]),
-			delayed_start: entityMeta("sensor", ["delayed_start", "delay_start", "relative_to_start_wm"], true),
-			dry_level: entityMeta("sensor", ["dry_level", "dryness_level"], true),
-			door: entityMeta("binary_sensor", ["door", "door_open"], false, true),
-			remote_start: entityMeta("binary_sensor", ["remote_start", "remote_operation"], true),
-			initial_time: entityMeta("sensor", ["initial_time", "total_time", "course_total_time"], true),
-			progress: entityMeta("sensor", ["progress", "completion_rate", "progress_percent"], true),
+			status: entityMeta("sensor", ["current_status"]),
+			cycle: entityMeta("sensor", ["current_cycle"], true),
+			remaining_time: entityMeta("sensor", ["remaining_time"]),
+			delayed_start: entityMeta("sensor", ["delayed_start"], true),
+			dry_level: entityMeta("sensor", ["dry_level"], true),
+			door: entityMeta("binary_sensor", ["door"], false, true),
+			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
+			initial_time: entityMeta("sensor", ["total_time"], true),
+			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
 	washer_combo: {
@@ -138,7 +138,7 @@ const APPLIANCES = {
 		accent: { start: "#8e2de2", end: "#4a00e0" },
 		keywords: ["washcombo", "washer", "dryer"],
 		defaultPrefixes: ["washcombo_main", "washer_dryer", "washcombo"],
-		meter: { remaining: "remaining_time", total: "initial_time", percent: "progress" },
+		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
 		chips: [
 			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
@@ -151,15 +151,15 @@ const APPLIANCES = {
 			detailRow("dry_level", "Dry level", "mdi:air-filter", "text", { optional: true }),
 		],
 		entities: {
-			status: entityMeta("sensor", ["current_status", "current_state", "run_state"]),
-			cycle: entityMeta("sensor", ["current_cycle", "current_course", "job_state"]),
-			remaining_time: entityMeta("sensor", ["remaining_time", "time_display", "remain"]),
-			delayed_start: entityMeta("sensor", ["delayed_start", "delay_start", "relative_to_start_wm"], true),
-			dry_level: entityMeta("sensor", ["dry_level", "dryness_level"], true),
-			door: entityMeta("binary_sensor", ["door", "door_lock"], false, true),
-			remote_start: entityMeta("binary_sensor", ["remote_start", "remote_operation"], true),
-			initial_time: entityMeta("sensor", ["initial_time", "total_time", "course_total_time"], true),
-			progress: entityMeta("sensor", ["progress", "completion_rate", "progress_percent"], true),
+			status: entityMeta("sensor", ["current_status"]),
+			cycle: entityMeta("sensor", ["current_cycle"]),
+			remaining_time: entityMeta("sensor", ["remaining_time"]),
+			delayed_start: entityMeta("sensor", ["delayed_start"], true),
+			dry_level: entityMeta("sensor", ["dry_level"], true),
+			door: entityMeta("binary_sensor", ["door"], false, true),
+			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
+			initial_time: entityMeta("sensor", ["total_time"], true),
+			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
 	mini_washer: {
@@ -168,7 +168,7 @@ const APPLIANCES = {
 		accent: { start: "#ff9a9e", end: "#fad0c4" },
 		keywords: ["mini", "wash"],
 		defaultPrefixes: ["washcombo_mini", "mini_washer", "mini"],
-		meter: { remaining: "remaining_time", total: "initial_time", percent: "progress" },
+		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
 		chips: [
 			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 		],
@@ -179,13 +179,13 @@ const APPLIANCES = {
 			detailRow("delayed_start", "Delay start", "mdi:clock-alert-outline", "duration", { optional: true }),
 		],
 		entities: {
-			status: entityMeta("sensor", ["current_status", "current_state", "run_state"]),
-			cycle: entityMeta("sensor", ["current_cycle", "current_course", "job_state"], true),
-			remaining_time: entityMeta("sensor", ["remaining_time", "time_display", "remain"]),
-			delayed_start: entityMeta("sensor", ["delayed_start", "delay_start", "relative_to_start_wm"], true),
-			door: entityMeta("binary_sensor", ["door", "door_lock"], false, true),
-			initial_time: entityMeta("sensor", ["initial_time", "total_time", "course_total_time"], true),
-			progress: entityMeta("sensor", ["progress", "completion_rate", "progress_percent"], true),
+			status: entityMeta("sensor", ["current_status"]),
+			cycle: entityMeta("sensor", ["current_cycle"], true),
+			remaining_time: entityMeta("sensor", ["remaining_time"]),
+			delayed_start: entityMeta("sensor", ["delayed_start"], true),
+			door: entityMeta("binary_sensor", ["door"], false, true),
+			initial_time: entityMeta("sensor", ["total_time"], true),
+			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
 	fridge: {
@@ -382,32 +382,30 @@ const APPLIANCES = {
 	    return { hass: {} };
 	  }
 
-	  constructor() {
-	    super();
-	    this.hass = undefined;
-	    this._config = {};
-	    this._definition = undefined;
-	    this._resolved = {};
-		this._autoPrefix = undefined;
-		this._meterState = { baseline: null, lastRemaining: null };
-	  }
+  constructor() {
+    super();
+    this.hass = undefined;
+    this._config = {};
+    this._definition = undefined;
+    this._resolved = {};
+	this._autoPrefix = undefined;
+  }
 
-	  setConfig(config = {}) {
-	    const forced = this.constructor.applianceType;
-	    const requested = config.appliance ?? forced ?? "dishwasher";
-	    const key = String(requested).toLowerCase();
-	    const definition = APPLIANCES[key];
-	    if (!definition) {
-	      throw new Error(`Unsupported appliance type: ${requested}`);
-	    }
-	    this._config = { ...config, appliance: key };
-	    this._definition = definition;
-	    this._resolved = {};
-	    this._autoPrefix = config.entity_prefix ?? undefined;
-		this._meterState = { baseline: null, lastRemaining: null };
-	  }
+  setConfig(config = {}) {
+    const forced = this.constructor.applianceType;
+    const requested = config.appliance ?? forced ?? "dishwasher";
+    const key = String(requested).toLowerCase();
+    const definition = APPLIANCES[key];
+    if (!definition) {
+      throw new Error(`Unsupported appliance type: ${requested}`);
+    }
+    this._config = { ...config, appliance: key };
+    this._definition = definition;
+    this._resolved = {};
+    this._autoPrefix = config.entity_prefix ?? undefined;
+  }
 
-	  set hass(value) {
+  set hass(value) {
 	    this.__hass = value;
 	    if (!value || !this._definition) {
 	      return;
@@ -582,25 +580,11 @@ _buildProgress() {
 		return null;
 	}
 
-	const remainingEntityId = this._resolved[config.remaining];
-	if (!this._meterState) {
-		this._meterState = this._loadMeterState(remainingEntityId);
-	}
-
 	const statusValue = this._stateValue("status");
-	const isActive = isTruthyState(statusValue);
 	const normalized = normalize(statusValue);
 
 	if (normalized && UNAVAILABLE.has(normalized)) {
-		this._clearMeterState(remainingEntityId);
-		this._meterState = { baseline: null, lastRemaining: null };
 		return null;
-	}
-
-	if (!isActive && this._meterState.baseline != null) {
-		this._clearMeterState(remainingEntityId);
-		this._meterState.baseline = null;
-		this._meterState.lastRemaining = null;
 	}
 
 	const remainingSeconds = parseDurationToSeconds(this._stateValue(config.remaining));
@@ -610,53 +594,17 @@ _buildProgress() {
 
 	if (totalSeconds != null && totalSeconds > 0 && remainingSeconds != null) {
 		percent = clamp(((totalSeconds - remainingSeconds) / totalSeconds) * 100, 0, 100);
-		this._meterState.baseline = totalSeconds;
-		this._meterState.lastRemaining = remainingSeconds;
-		this._saveMeterState(remainingEntityId, this._meterState);
 	}
 
-	if (percent == null && Number.isFinite(percentRaw)) {
-		percent = clamp(percentRaw, 0, 100);
-		if (remainingSeconds != null && percent > 0 && percent < 100) {
-			const estimated = remainingSeconds / (1 - percent / 100);
-			if (Number.isFinite(estimated) && estimated > 0) {
-				this._meterState.baseline = estimated;
-				this._saveMeterState(remainingEntityId, this._meterState);
-			}
-		}
-	}
-
-	if (percent == null && remainingSeconds != null) {
-		if (
-			this._meterState.baseline == null ||
-			this._meterState.baseline <= 0 ||
-			(this._meterState.lastRemaining != null && remainingSeconds > this._meterState.lastRemaining + 60)
-		) {
-			this._meterState.baseline = remainingSeconds;
-		} else if (remainingSeconds > this._meterState.baseline) {
-			this._meterState.baseline = remainingSeconds;
-		}
-
-		this._meterState.lastRemaining = remainingSeconds;
-		this._saveMeterState(remainingEntityId, this._meterState);
-
-		if (this._meterState.baseline && this._meterState.baseline > 0) {
-			percent = clamp(((this._meterState.baseline - remainingSeconds) / this._meterState.baseline) * 100, 0, 100);
-		}
-	} else if (remainingSeconds == null) {
-		this._meterState.lastRemaining = null;
+	if (percent == null && Number.isFinite(percentRaw) && percentRaw >= 0 && percentRaw <= 100) {
+		percent = percentRaw;
 	}
 
 	if (percent == null) {
 		return null;
 	}
 
-	if (remainingSeconds != null && remainingSeconds <= 0) {
-		this._clearMeterState(remainingEntityId);
-		this._meterState.baseline = null;
-	}
-
-	const label = remainingSeconds != null ? `${formatDurationShort(remainingSeconds)} left` : null;
+	const label = remainingSeconds != null && remainingSeconds > 0 ? `${formatDurationShort(remainingSeconds)} left` : null;
 	return { percent, label };
 }	  _renderChips() {
 	    const chips = (this._definition.chips ?? [])
@@ -780,7 +728,7 @@ _buildProgress() {
 		const progress = this._buildProgress();
 		const chips = this._renderChips();
 		const details = this._renderDetails();
-		const isActive = isTruthyState(statusValue) || Boolean(progress && progress.percent > 0);
+		const isActive = !isOffline && (isTruthyState(statusValue) || Boolean(progress && progress.percent > 0));
 		const cardClasses = ["lg-thinq"];
 		if (isActive) {
 		  cardClasses.push("lg-thinq--active");
