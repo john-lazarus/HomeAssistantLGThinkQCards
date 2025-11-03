@@ -1,4 +1,4 @@
-const VERSION = "0.2.1";
+const VERSION = "0.2.2";
 
 /* eslint-disable no-console */
 console.info(
@@ -1045,6 +1045,11 @@ const APPLIANCES = {
 	      return null;
 	    }
 
+	    // Don't show cycle/program when appliance is inactive (prevents showing stale data)
+	    if (detail.key === "cycle" && !this._isApplianceActive()) {
+	      return null;
+	    }
+
 		switch (detail.format) {
 		  case "duration": {
 		    const seconds = parseDurationToSeconds(raw);
@@ -1065,6 +1070,35 @@ const APPLIANCES = {
 		    }
 		    return prettifyText(raw);
 		}
+	  }
+
+	  _isApplianceActive() {
+	    const statusValue = this._stateValue("status");
+	    const statusNormalized = normalize(statusValue);
+	    
+	    // Check if status indicates active operation
+	    if (statusNormalized && !UNAVAILABLE.has(statusNormalized)) {
+	      // If status is a passive state (off, idle, etc.), appliance is inactive
+	      if (PASSIVE_STATES.includes(statusNormalized)) {
+	        return false;
+	      }
+	      // Any other non-passive status means active
+	      if (statusNormalized) {
+	        return true;
+	      }
+	    }
+	    
+	    // Fallback: check if there's progress
+	    const config = this._definition.meter;
+	    if (config) {
+	      const remainingValue = this._stateValue(config.remaining);
+	      const remainingSeconds = parseDurationToSeconds(remainingValue);
+	      if (remainingSeconds != null && remainingSeconds > 0) {
+	        return true;
+	      }
+	    }
+	    
+	    return false;
 	  }
 
 _buildProgress() {
