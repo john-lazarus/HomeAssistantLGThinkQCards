@@ -1,4 +1,4 @@
-const VERSION = "0.2.3";
+const VERSION = "0.2.4";
 
 /* eslint-disable no-console */
 console.info(
@@ -1075,6 +1075,13 @@ const APPLIANCES = {
 	  _isApplianceActive() {
 	    const statusValue = this._stateValue("status");
 	    const statusNormalized = normalize(statusValue);
+	    
+	    console.log('[LG ThinQ Active Check]', {
+	      statusValue,
+	      statusNormalized,
+	      isInPassiveStates: PASSIVE_STATES.includes(statusNormalized),
+	      passiveStates: PASSIVE_STATES
+	    });
 	    
 	    // Check if status indicates active operation
 	    if (statusNormalized && !UNAVAILABLE.has(statusNormalized)) {
