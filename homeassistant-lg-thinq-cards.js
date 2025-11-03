@@ -1,4 +1,4 @@
-const VERSION = "0.4.1";
+const VERSION = "0.4.2";
 
 /* eslint-disable no-console */
 console.info(
@@ -388,7 +388,8 @@ const APPLIANCES = {
 	    this._config = {};
 	    this._definition = undefined;
 	    this._resolved = {};
-	    this._autoPrefix = undefined;
+		this._autoPrefix = undefined;
+		this._meterState = { baseline: null, lastRemaining: null };
 	  }
 
 	  setConfig(config = {}) {
@@ -403,6 +404,7 @@ const APPLIANCES = {
 	    this._definition = definition;
 	    this._resolved = {};
 	    this._autoPrefix = config.entity_prefix ?? undefined;
+		this._meterState = { baseline: null, lastRemaining: null };
 	  }
 
 	  set hass(value) {
@@ -574,40 +576,73 @@ const APPLIANCES = {
 		}
 	  }
 
-	  _buildProgress() {
-	    const config = this._definition.meter;
-	    if (!config) {
-	      return null;
-	    }
+	_buildProgress() {
+		const config = this._definition.meter;
+		if (!config) {
+			return null;
+		}
 
-	    const remainingSeconds = parseDurationToSeconds(this._stateValue(config.remaining));
-	    const totalSeconds = parseDurationToSeconds(this._stateValue(config.total));
+		const meterState = this._meterState ?? (this._meterState = { baseline: null, lastRemaining: null });
+		const statusValue = this._stateValue("status");
+		const isActive = isTruthyState(statusValue);
 
-	let percent = null;
-	if (totalSeconds != null && totalSeconds > 0 && remainingSeconds != null) {
-	  percent = clamp(((totalSeconds - remainingSeconds) / totalSeconds) * 100, 0, 100);
+		if (!isActive && meterState.baseline != null) {
+			meterState.baseline = null;
+			meterState.lastRemaining = null;
+		}
+
+		const remainingSeconds = parseDurationToSeconds(this._stateValue(config.remaining));
+		const totalSeconds = parseDurationToSeconds(this._stateValue(config.total));
+		const percentRaw = Number(this._stateValue(config.percent));
+		let percent = null;
+
+		if (totalSeconds != null && totalSeconds > 0 && remainingSeconds != null) {
+			percent = clamp(((totalSeconds - remainingSeconds) / totalSeconds) * 100, 0, 100);
+			meterState.baseline = totalSeconds;
+			meterState.lastRemaining = remainingSeconds;
+		}
+
+		if (percent == null && Number.isFinite(percentRaw)) {
+			percent = clamp(percentRaw, 0, 100);
+			if (remainingSeconds != null && percent > 0 && percent < 100) {
+				const estimated = remainingSeconds / (1 - percent / 100);
+				if (Number.isFinite(estimated) && estimated > 0) {
+					meterState.baseline = estimated;
+				}
+			}
+		}
+
+		if (percent == null && remainingSeconds != null) {
+			if (
+				meterState.baseline == null ||
+				meterState.baseline <= 0 ||
+				(meterState.lastRemaining != null && remainingSeconds > meterState.lastRemaining + 60)
+			) {
+				meterState.baseline = remainingSeconds;
+			} else if (remainingSeconds > meterState.baseline) {
+				meterState.baseline = remainingSeconds;
+			}
+
+			meterState.lastRemaining = remainingSeconds;
+
+			if (meterState.baseline && meterState.baseline > 0) {
+				percent = clamp(((meterState.baseline - remainingSeconds) / meterState.baseline) * 100, 0, 100);
+			}
+		} else if (remainingSeconds == null) {
+			meterState.lastRemaining = null;
+		}
+
+		if (percent == null) {
+			return null;
+		}
+
+		if (remainingSeconds != null && remainingSeconds <= 0) {
+			meterState.baseline = null;
+		}
+
+		const label = remainingSeconds != null ? `${formatDurationShort(remainingSeconds)} left` : null;
+		return { percent, label };
 	}
-
-	if (percent == null) {
-	  const percentValue = this._stateValue(config.percent);
-	  const numericPercent = Number(percentValue);
-	  if (Number.isFinite(numericPercent)) {
-	    percent = clamp(numericPercent, 0, 100);
-	  }
-	}
-
-	    if (percent == null && remainingSeconds != null) {
-	      const defaultTotal = Math.max(remainingSeconds, 1);
-	      percent = clamp(((defaultTotal - remainingSeconds) / defaultTotal) * 100, 0, 100);
-	    }
-
-	    if (percent == null) {
-	      return null;
-	    }
-
-	    const label = remainingSeconds != null ? `${formatDurationShort(remainingSeconds)} left` : null;
-	    return { percent, label };
-	  }
 
 	  _renderChips() {
 	    const chips = (this._definition.chips ?? [])
