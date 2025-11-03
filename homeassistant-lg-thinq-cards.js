@@ -1,4 +1,4 @@
-const VERSION = "0.5.4";
+const VERSION = "0.1.0";
 
 /* eslint-disable no-console */
 console.info(

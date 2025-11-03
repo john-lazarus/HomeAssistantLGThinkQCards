@@ -17,8 +17,8 @@
 
 1. Install the official [LG ThinQ](https://www.home-assistant.io/integrations/lg_thinq/) integration and confirm your washer/dryer/etc. entities show up in **Developer Tools → States**.
 2. In **HACS → Frontend → ⋮ → Custom repositories**, add `https://github.com/john-lazarus/HomeAssistantLGThinkQCards` (category **Lovelace**).
-3. Install **Home Assistant LG ThinQ Cards** and, when asked for a version, choose `v0.5.3` or later. HACS drops the file in `/config/www/community/HomeAssistantLGThinkQCards/` and creates a resource pointing to `/hacsfiles/HomeAssistantLGThinkQCards/homeassistant-lg-thinq-cards.js`.
-4. Force-refresh your browser (Ctrl+F5 / Cmd+Shift+R). If you see `HomeAssistant LG ThinQ Cards 0.5.3` (or newer) in the dev console, the bundle loaded.
+3. Install **Home Assistant LG ThinQ Cards** and, when asked for a version, choose `v0.1.0` or later. HACS drops the file in `/config/www/community/HomeAssistantLGThinkQCards/` and creates a resource pointing to `/hacsfiles/HomeAssistantLGThinkQCards/homeassistant-lg-thinq-cards.js`.
+4. Force-refresh your browser (Ctrl+F5 / Cmd+Shift+R). If you see `HomeAssistant LG ThinQ Cards 0.1.0` (or newer) in the dev console, the bundle loaded.
 5. In Lovelace, add a **Manual** card with:
 
   ```yaml
