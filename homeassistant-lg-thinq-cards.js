@@ -20,7 +20,7 @@ if (!html || !css) {
 	throw new Error("Lit helpers unavailable: ensure Home Assistant 2023.10+ is running");
 }
 
-const UNAVAILABLE = new Set(["unknown", "unavailable", "none", "", "idle"]);
+const UNAVAILABLE = new Set(["unknown", "unavailable", "none", ""]);
 const DEFAULT_ACTIVE_STATES = ["on", "true", "open", "running", "active", "enabled", "start", "started"];
 const PASSIVE_STATES = ["off", "standby", "ready", "idle", "complete", "completed", "done", "finished", "end", "ended", "paused", "pause"];
 
@@ -64,7 +64,7 @@ const APPLIANCES = {
 			steam_option: entityMeta(["sensor", "switch"], ["steam_option"], true),
 			dual_zone: entityMeta(["sensor", "switch"], ["dual_zone"], true),
 			extra_dry: entityMeta(["sensor", "switch"], ["extra_dry"], true),
-			initial_time: entityMeta("sensor", ["total_time"], true),
+			total_time: entityMeta("sensor", ["total_time"], true),
 			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
@@ -98,7 +98,7 @@ const APPLIANCES = {
 			cycle_count: entityMeta("sensor", ["cycles"], true),
 			door: entityMeta("binary_sensor", ["door"], false, true),
 			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
-			initial_time: entityMeta("sensor", ["total_time"], true),
+			total_time: entityMeta("sensor", ["total_time"], true),
 			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
@@ -128,7 +128,7 @@ const APPLIANCES = {
 			dry_level: entityMeta("sensor", ["dry_level"], true),
 			door: entityMeta("binary_sensor", ["door"], false, true),
 			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
-			initial_time: entityMeta("sensor", ["total_time"], true),
+			total_time: entityMeta("sensor", ["total_time"], true),
 			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
@@ -158,7 +158,7 @@ const APPLIANCES = {
 			dry_level: entityMeta("sensor", ["dry_level"], true),
 			door: entityMeta("binary_sensor", ["door"], false, true),
 			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
-			initial_time: entityMeta("sensor", ["total_time"], true),
+			total_time: entityMeta("sensor", ["total_time"], true),
 			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
@@ -184,7 +184,7 @@ const APPLIANCES = {
 			remaining_time: entityMeta("sensor", ["remaining_time"]),
 			delayed_start: entityMeta("sensor", ["delayed_start"], true),
 			door: entityMeta("binary_sensor", ["door"], false, true),
-			initial_time: entityMeta("sensor", ["total_time"], true),
+			total_time: entityMeta("sensor", ["total_time"], true),
 			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
