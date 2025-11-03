@@ -1,4 +1,4 @@
-const VERSION = "0.1.4";
+const VERSION = "0.1.5";
 
 /* eslint-disable no-console */
 console.info(
@@ -313,6 +313,12 @@ const APPLIANCES = {
 	    return null;
 	  }
 	  
+	  // Check for plain numbers FIRST (total_time sensor returns just "38" for 38 minutes)
+	  const numeric = Number(raw);
+	  if (!Number.isNaN(numeric)) {
+	    return numeric * 60;
+	  }
+	  
 	  // Handle "in X minutes/hours" relative timestamp format from Home Assistant
 	  // LG ThinQ TIMESTAMP sensors display as "in X minutes" when formatted
 	  const inFormat = raw.match(/^in\s+(\d+)\s+(minute|minutes|hour|hours)$/i);
@@ -349,16 +355,12 @@ const APPLIANCES = {
 	    const seconds = Number(iso[3] ?? 0);
 	    return hours * 3600 + minutes * 60 + seconds;
 	  }
+	// ISO timestamp (remaining_time returns "2025-11-03T23:52:15+00:00")
 	const timestamp = Date.parse(raw);
 	if (!Number.isNaN(timestamp)) {
 	  const diff = Math.round((timestamp - Date.now()) / 1000);
 	  return diff >= 0 ? diff : 0;
 	}
-	  const numeric = Number(raw);
-	  if (!Number.isNaN(numeric)) {
-	    // Plain numbers from LG ThinQ are in minutes
-	    return numeric * 60;
-	  }
 	  return null;
 	}
 
