@@ -1,4 +1,4 @@
-const VERSION = "0.1.2";
+const VERSION = "0.1.3";
 
 /* eslint-disable no-console */
 console.info(
@@ -640,6 +640,14 @@ _buildProgress() {
 	const remainingSeconds = parseDurationToSeconds(remainingValue);
 	const totalSeconds = parseDurationToSeconds(totalValue);
 	let percent = null;
+
+	console.log('[LG ThinQ Progress]', {
+		remainingValue,
+		totalValue,
+		remainingSeconds,
+		totalSeconds,
+		calculation: totalSeconds && remainingSeconds != null ? `(${totalSeconds} - ${remainingSeconds}) / ${totalSeconds} = ${((totalSeconds - remainingSeconds) / totalSeconds * 100).toFixed(1)}%` : 'null'
+	});
 
 	// Progress shows completion: 0% at start, 100% when done
 	if (totalSeconds != null && totalSeconds > 0 && remainingSeconds != null && remainingSeconds >= 0) {
