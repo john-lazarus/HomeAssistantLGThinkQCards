@@ -1,4 +1,4 @@
-const VERSION = "0.2.2";
+const VERSION = "0.2.3";
 
 /* eslint-disable no-console */
 console.info(
@@ -22,7 +22,7 @@ if (!html || !css) {
 
 const UNAVAILABLE = new Set(["unknown", "unavailable"]);
 const DEFAULT_ACTIVE_STATES = ["on", "true", "open", "running", "active", "enabled", "start", "started"];
-const PASSIVE_STATES = ["off", "standby", "ready", "idle", "complete", "completed", "done", "finished", "end", "ended", "paused", "pause"];
+const PASSIVE_STATES = ["off", "power off", "standby", "ready", "idle", "complete", "completed", "done", "finished", "end", "ended", "paused", "pause", "stopped", "stop"];
 
 const APPLIANCES = {
 	dishwasher: {
