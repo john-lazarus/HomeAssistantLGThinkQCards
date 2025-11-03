@@ -1,4 +1,4 @@
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 
 /* eslint-disable no-console */
 console.info(
@@ -31,7 +31,7 @@ const APPLIANCES = {
 		accent: { start: "#00b4d8", end: "#0077b6" },
 		keywords: ["dishwasher"],
 		defaultPrefixes: ["dishwasher"],
-		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
+		meter: { remaining: "remaining_time", total: "total_time" },
 		chips: [
 			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 			chipMeta("power", "mdi:power", { active: "Powered", hideInactive: true }),
@@ -65,7 +65,6 @@ const APPLIANCES = {
 			dual_zone: entityMeta(["sensor", "switch"], ["dual_zone"], true),
 			extra_dry: entityMeta(["sensor", "switch"], ["extra_dry"], true),
 			total_time: entityMeta("sensor", ["total_time"], true),
-			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
 	washer: {
@@ -74,7 +73,7 @@ const APPLIANCES = {
 		accent: { start: "#4ecdc4", end: "#2a9d8f" },
 		keywords: ["washer", "wash"],
 		defaultPrefixes: ["washer", "washtower_washer", "washcombo_main"],
-		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
+		meter: { remaining: "remaining_time", total: "total_time" },
 		chips: [
 			chipMeta("door", "mdi:door", { active: "Door unlocked", inactive: "Door locked" }, { hideInactive: true }),
 			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
@@ -99,7 +98,6 @@ const APPLIANCES = {
 			door: entityMeta("binary_sensor", ["door"], false, true),
 			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
 			total_time: entityMeta("sensor", ["total_time"], true),
-			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
 	dryer: {
@@ -108,7 +106,7 @@ const APPLIANCES = {
 		accent: { start: "#f4a261", end: "#e76f51" },
 		keywords: ["dryer"],
 		defaultPrefixes: ["dryer", "washtower_dryer"],
-		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
+		meter: { remaining: "remaining_time", total: "total_time" },
 		chips: [
 			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
 			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
@@ -129,7 +127,6 @@ const APPLIANCES = {
 			door: entityMeta("binary_sensor", ["door"], false, true),
 			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
 			total_time: entityMeta("sensor", ["total_time"], true),
-			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
 	washer_combo: {
@@ -138,7 +135,7 @@ const APPLIANCES = {
 		accent: { start: "#8e2de2", end: "#4a00e0" },
 		keywords: ["washcombo", "washer", "dryer"],
 		defaultPrefixes: ["washcombo_main", "washer_dryer", "washcombo", "washerdryer"],
-		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
+		meter: { remaining: "remaining_time", total: "total_time" },
 		chips: [
 			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
@@ -159,7 +156,6 @@ const APPLIANCES = {
 			door: entityMeta("binary_sensor", ["door"], false, true),
 			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
 			total_time: entityMeta("sensor", ["total_time"], true),
-			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
 	mini_washer: {
@@ -168,7 +164,7 @@ const APPLIANCES = {
 		accent: { start: "#ff9a9e", end: "#fad0c4" },
 		keywords: ["mini", "wash"],
 		defaultPrefixes: ["washcombo_mini", "mini_washer", "mini"],
-		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
+		meter: { remaining: "remaining_time", total: "total_time" },
 		chips: [
 			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 		],
@@ -185,7 +181,6 @@ const APPLIANCES = {
 			delayed_start: entityMeta("sensor", ["delayed_start"], true),
 			door: entityMeta("binary_sensor", ["door"], false, true),
 			total_time: entityMeta("sensor", ["total_time"], true),
-			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
 	washtower: {
@@ -194,7 +189,7 @@ const APPLIANCES = {
 		accent: { start: "#667eea", end: "#764ba2" },
 		keywords: ["washtower", "tower"],
 		defaultPrefixes: ["washtower"],
-		meter: { remaining: "remaining_time", total: "total_time", percent: "progress" },
+		meter: { remaining: "remaining_time", total: "total_time" },
 		chips: [
 			chipMeta("door", "mdi:door", { active: "Door open", inactive: "Door closed" }, { hideInactive: true }),
 			chipMeta("remote_start", "mdi:wifi", { active: "Remote start" }, { tone: "soft" }),
@@ -213,7 +208,6 @@ const APPLIANCES = {
 			door: entityMeta("binary_sensor", ["door"], false, true),
 			remote_start: entityMeta("binary_sensor", ["remote_start"], true),
 			total_time: entityMeta("sensor", ["total_time"], true),
-			progress: entityMeta("sensor", ["progress"], true),
 		},
 	},
 	fridge: {
@@ -617,7 +611,6 @@ _buildProgress() {
 
 	const remainingValue = this._stateValue(config.remaining);
 	const totalValue = this._stateValue(config.total);
-	const percentValue = this._stateValue(config.percent);
 
 	if (remainingValue != null && UNAVAILABLE.has(normalize(remainingValue))) {
 		return null;
@@ -628,15 +621,10 @@ _buildProgress() {
 
 	const remainingSeconds = parseDurationToSeconds(remainingValue);
 	const totalSeconds = parseDurationToSeconds(totalValue);
-	const percentRaw = Number(percentValue);
 	let percent = null;
 
 	if (totalSeconds != null && totalSeconds > 0 && remainingSeconds != null && remainingSeconds >= 0) {
 		percent = clamp(((totalSeconds - remainingSeconds) / totalSeconds) * 100, 0, 100);
-	}
-
-	if (percent == null && Number.isFinite(percentRaw) && percentRaw >= 0 && percentRaw <= 100) {
-		percent = percentRaw;
 	}
 
 	if (percent == null) {
@@ -902,7 +890,27 @@ _buildProgress() {
       }
 
       .lg-thinq--active .lg-thinq__progress-value {
+        background: linear-gradient(135deg, var(--lg-accent-start), var(--lg-accent-end));
+        background-size: 200% 200%;
         animation: lg-thinq-progress-flow 1.5s linear infinite;
+      }
+
+      .lg-thinq--active .lg-thinq__progress-value::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: repeating-linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0.1) 10px,
+          rgba(255, 255, 255, 0.2) 10px,
+          rgba(255, 255, 255, 0.2) 20px
+        );
+        background-size: 28px 28px;
+        animation: lg-thinq-progress-stripes 0.8s linear infinite;
       }
 
       .lg-thinq--active .lg-thinq__progress-value::after {
@@ -912,7 +920,7 @@ _buildProgress() {
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
         animation: lg-thinq-progress-shimmer 2s linear infinite;
       }	      .lg-thinq__progress-label {
 	        margin-top: 8px;
@@ -1036,6 +1044,15 @@ _buildProgress() {
 	        }
 	        100% {
 	          filter: brightness(1);
+	        }
+	      }
+
+	      @keyframes lg-thinq-progress-stripes {
+	        0% {
+	          background-position: 0 0;
+	        }
+	        100% {
+	          background-position: 28px 0;
 	        }
 	      }
 
