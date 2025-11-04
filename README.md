@@ -7,7 +7,12 @@
 
 > **⚠️ Alpha Software**: This project is in active development. Minor issues may occur. If you encounter any problems, please [open an issue](https://github.com/john-lazarus/HomeAssistantLGThinkQCards/issues).
 
-![LG ThinQ card preview](docs/card-preview.png)
+## Screenshots
+
+<div align="center">
+  <img src="docs/dishwasher-active.png" alt="Dishwasher Active" width="45%">
+  <img src="docs/washer-inactive.png" alt="Washer Inactive" width="45%">
+</div>
 
 ## What you get
 
