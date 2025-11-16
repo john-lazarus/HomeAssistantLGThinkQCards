@@ -3,7 +3,6 @@
   <p>Zero-config Home Assistant cards for LG ThinQ appliances with live progress, smart chips, and polished gradients.</p>
   
   <a href="https://www.buymeacoffee.com/trusmith" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60" width="217"></a>
-  <a href="https://hacs.xyz/" target="_blank"><img src="https://img.shields.io/badge/HACS-Install-brightgreen?style=for-the-badge&logo=hacs" alt="Install via HACS"></a>
 </div>
 
 > **⚠️ Beta Software**: This project is in active development. Minor issues may occur. If you encounter any problems, please [open an issue](https://github.com/john-lazarus/HomeAssistantLGThinkQCards/issues).
@@ -23,12 +22,24 @@
 - Detail sections with duration formatting, unit-aware temperatures, and grouped measurements.
 - Packaged for [HACS](https://hacs.xyz/) so the bundle updates alongside your other frontend cards.
 
+## Install via HACS
+
+<div align="center">
+  <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=john-lazarus&repository=HomeAssistantLGThinkQCards&category=plugin"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Install via HACS"></a>
+</div>
+
+1. Click the blue **Install in HACS** button above or open `https://my.home-assistant.io/redirect/hacs_repository/?owner=john-lazarus&repository=HomeAssistantLGThinkQCards&category=plugin`.
+2. When Home Assistant opens, confirm HACS is installed and logged in, then select **Open link**.
+3. Choose **Download** inside HACS; keep the resource URL set to `/hacsfiles/HomeAssistantLGThinkQCards/homeassistant-lg-thinq-cards.js`.
+4. After the download completes, click **Reload** so the new resources register.
+5. Hard-refresh your browser (`Ctrl+F5` / `Cmd+Shift+R`) to ensure the updated bundle loads.
+
 ## Quick start
 
 1. Install the official [LG ThinQ](https://www.home-assistant.io/integrations/lg_thinq/) integration and confirm your washer/dryer/etc. entities show up in **Developer Tools → States**.
-2. In **HACS → Frontend → ⋮ → Custom repositories**, add `https://github.com/john-lazarus/HomeAssistantLGThinkQCards` (category **Lovelace**).
-3. Install **Home Assistant LG ThinQ Cards** and, when asked for a version, choose `v0.1.0` or later. HACS drops the file in `/config/www/community/HomeAssistantLGThinkQCards/` and creates a resource pointing to `/hacsfiles/HomeAssistantLGThinkQCards/homeassistant-lg-thinq-cards.js`.
-4. Force-refresh your browser (Ctrl+F5 / Cmd+Shift+R). If you see `HomeAssistant LG ThinQ Cards 0.1.0` (or newer) in the dev console, the bundle loaded.
+2. Install the card through HACS either by using the **Install in HACS** button above or via **HACS → Frontend** and searching for “LG ThinQ cards.”
+3. Confirm HACS auto-added the resource. If not, add it manually under `Settings → Dashboards → Resources` with URL `/hacsfiles/HomeAssistantLGThinkQCards/homeassistant-lg-thinq-cards.js` (type `module`).
+4. Force-refresh your browser (`Ctrl+F5` / `Cmd+Shift+R`) so the latest bundle loads.
 5. In Lovelace, add a **Manual** card with:
 
   ```yaml
@@ -89,6 +100,6 @@ entities:
 
 - Original ThinQ inspiration and community research by the Home Assistant community and LG ThinQ integration maintainers.
 - Iconography from [Material Design Icons](https://materialdesignicons.com/), used under their permissive license.
-- Project maintained by John Lazarus under the MIT License (see `LICENSE`).
+- Project maintained by John Lazarus under the [MIT License](LICENSE).
 
 Contributions, bug reports, and screenshots of your dashboards are welcome!
