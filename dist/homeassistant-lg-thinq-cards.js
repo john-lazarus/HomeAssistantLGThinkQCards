@@ -1168,7 +1168,7 @@ _buildProgress() {
 	  }
 
 	  _renderChip(chip) {
-	    const stateObj = this._stateObj(chip.key);
+		const stateObj = this._stateObj(chip.key);
 	    const value = stateObj?.state;
 		if (value == null) {
 	      return null;
@@ -1185,7 +1185,7 @@ _buildProgress() {
 	      return null;
 	    }
 
-	    const label = isActive ? chip.active : chip.inactive;
+	    const label = (isActive ? chip.active : chip.inactive);
 	    const variant = isActive ? "active" : "inactive";
 	    const tone = chip.tone === "soft" ? "soft" : "solid";
 
@@ -1218,11 +1218,13 @@ _buildProgress() {
 	      if (!groups.has(group)) {
 	        groups.set(group, []);
 	      }
+		  const stateObj = this._stateObj(detail.key);
+		  const label = stateObj?.attributes.friendly_name ?? detail.label;
 	      groups.get(group).push(
 	        html`
 	          <div class="lg-thinq__detail-row">
 	            ${detail.icon ? html`<ha-icon icon=${detail.icon}></ha-icon>` : null}
-	            <span class="lg-thinq__detail-label">${detail.label}</span>
+	            <span class="lg-thinq__detail-label">${label}</span>
 	            <span class="lg-thinq__detail-value">${value ?? "—"}</span>
 	          </div>
 	        `
@@ -1250,7 +1252,11 @@ _buildProgress() {
 	      return html``;
 	    }
 
-		const header = this._config.title ?? this._config.name ?? this._definition.label;
+		const mainEntity = this._stateObj(this._config.appliance);
+		const header = this._config.title ?? 
+						this._config.name ?? 
+						mainEntity?.attributes.friendly_name ?? 
+						this._definition.label;
 		const accent = this._definition.accent ?? { start: "#8df427", end: "#4caf50" };
 		const statusValue = this._stateValue("status");
 		const statusNormalized = statusValue != null ? normalize(statusValue) : null;
