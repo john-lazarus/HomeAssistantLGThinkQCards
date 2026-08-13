@@ -1,4 +1,4 @@
-const VERSION = "0.2.5";
+const VERSION = "0.3.0";
 
 /* eslint-disable no-console */
 console.info(
@@ -886,26 +886,68 @@ const APPLIANCES = {
 
   setConfig(config = {}) {
     const forced = this.constructor.applianceType;
-    const requested = config.appliance ?? forced ?? "dishwasher";
-    const key = String(requested).toLowerCase();
-    const definition = APPLIANCES[key];
-    if (!definition) {
+    const requested = config.appliance ?? forced;
+    const key = requested == null ? null : String(requested).toLowerCase();
+    const definition = key == null ? undefined : APPLIANCES[key];
+    if (key != null && !definition) {
       throw new Error(`Unsupported appliance type: ${requested}`);
     }
-    this._config = { ...config, appliance: key };
+    if (config.hide_entities != null && !Array.isArray(config.hide_entities)) {
+      throw new Error("hide_entities must be a list of entity keys");
+    }
+    this._config = key == null ? { ...config } : { ...config, appliance: key };
     this._definition = definition;
+    this._hiddenEntities = new Set((config.hide_entities ?? []).map(String));
     this._resolved = {};
     this._autoPrefix = config.entity_prefix ?? undefined;
   }
 
   set hass(value) {
 	    this.__hass = value;
-	    if (!value || !this._definition) {
+	    if (!value) {
 	      return;
 	    }
+      if (!this._definition) {
+        const detected = this._detectAppliance();
+        if (!detected) {
+          return;
+        }
+        this._config = { ...this._config, appliance: detected };
+        this._definition = APPLIANCES[detected];
+      }
 	    this._resolveEntities();
 	    this.requestUpdate();
 	  }
+
+  _detectAppliance() {
+    let best = null;
+    let bestScore = 0;
+    for (const [key, definition] of Object.entries(APPLIANCES)) {
+      let score = 0;
+      for (const entityId of Object.keys(this.hass?.states ?? {})) {
+        const stem = entityId.split(".", 2)[1]?.toLowerCase() ?? "";
+        let prefixScore = 0;
+        for (const prefix of definition.defaultPrefixes ?? []) {
+          const normalizedPrefix = prefix.toLowerCase();
+          if (stem === normalizedPrefix || stem.startsWith(`${normalizedPrefix}_`)) {
+            prefixScore = Math.max(prefixScore, 1000 + normalizedPrefix.length);
+          }
+        }
+        let keywordScore = 0;
+        for (const keyword of definition.keywords ?? []) {
+          if (stem.includes(keyword.toLowerCase())) {
+            keywordScore = Math.max(keywordScore, keyword.length);
+          }
+        }
+        score += prefixScore + keywordScore;
+      }
+      if (score > bestScore) {
+        best = key;
+        bestScore = score;
+      }
+    }
+    return best;
+  }
 
 	  get hass() {
 	    return this.__hass;
@@ -1027,6 +1069,9 @@ const APPLIANCES = {
 	  }
 
 	  _stateObj(key) {
+      if (this._hiddenEntities?.has(key)) {
+        return undefined;
+      }
 	    const id = this._resolved[key];
 	    return id ? this.hass.states[id] : undefined;
 	  }
@@ -1218,11 +1263,12 @@ _buildProgress() {
 	      if (!groups.has(group)) {
 	        groups.set(group, []);
 	      }
+	      const label = this._stateObj(detail.key)?.attributes?.friendly_name ?? detail.label;
 	      groups.get(group).push(
 	        html`
 	          <div class="lg-thinq__detail-row">
 	            ${detail.icon ? html`<ha-icon icon=${detail.icon}></ha-icon>` : null}
-	            <span class="lg-thinq__detail-label">${detail.label}</span>
+	            <span class="lg-thinq__detail-label">${label}</span>
 	            <span class="lg-thinq__detail-value">${value ?? "—"}</span>
 	          </div>
 	        `

@@ -7,6 +7,19 @@ on:
   pull_request:
 
 jobs:
+  test:
+    name: Card tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          node tests/card.test.cjs
+          node --input-type=module --check < homeassistant-lg-thinq-cards.js
+          node --input-type=module --check < dist/homeassistant-lg-thinq-cards.js
+          cmp homeassistant-lg-thinq-cards.js dist/homeassistant-lg-thinq-cards.js
+
   hacs:
     name: HACS Action
     runs-on: ubuntu-latest
