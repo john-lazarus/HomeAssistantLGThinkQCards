@@ -66,6 +66,18 @@ entities:
   door: binary_sensor.laundry_washer_door
 ```
 
+Hide fields you do not want on the card by their entity key:
+
+```yaml
+type: custom:lg-thinq-card
+appliance: washer
+hide_entities:
+  - cycle_count
+  - door
+```
+
+See [docs/README.md](docs/README.md) for the entity keys available for each appliance.
+
 ### Manual installation
 
 1. Copy `homeassistant-lg-thinq-cards.js` into `<config>/www/community/homeassistant-lg-thinq-cards/`.
@@ -75,7 +87,7 @@ entities:
 ### Troubleshooting checklist
 
 - Resource missing? Visit `https://<ha-host>/hacsfiles/HomeAssistantLGThinkQCards/homeassistant-lg-thinq-cards.js`—you should see the bundle source.
-- Still cached? Append `?v=0.5.0` to the resource URL or hard-reload the browser.
+- Still cached? Append `?v=0.3.0` to the resource URL or hard-reload the browser.
 - Wrong entity match? Pass `appliance: washer` (etc.) or override specific sensors under `entities:`.
 
 ## Features in depth
@@ -87,7 +99,7 @@ entities:
 
 ## Development & testing
 
-- `dist/homeassistant-lg-thinq-cards.js` contains the published bundle. Run `node --check dist/homeassistant-lg-thinq-cards.js` after edits to confirm syntax.
+- `dist/homeassistant-lg-thinq-cards.js` contains the published bundle. Run `node tests/card.test.cjs` and `node --input-type=module --check < dist/homeassistant-lg-thinq-cards.js` after edits.
 - `homeassistant-lg-thinq-cards.js` mirrors the bundle so HACS and manual installs share a single entry point.
 
 ## Roadmap
