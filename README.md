@@ -10,8 +10,8 @@
 ## Screenshots
 
 <div align="center">
-  <img src="docs/dishwasher-active.png" alt="Dishwasher Active" width="45%">
-  <img src="docs/washer-inactive.png" alt="Washer Inactive" width="45%">
+  <img src="https://raw.githubusercontent.com/john-lazarus/HomeAssistantLGThinkQCards/main/docs/dishwasher-active.png" alt="Dishwasher Active" width="45%">
+  <img src="https://raw.githubusercontent.com/john-lazarus/HomeAssistantLGThinkQCards/main/docs/washer-inactive.png" alt="Washer Inactive" width="45%">
 </div>
 
 ## What you get
