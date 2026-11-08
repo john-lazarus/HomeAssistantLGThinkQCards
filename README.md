@@ -87,7 +87,7 @@ See [docs/README.md](docs/README.md) for the entity keys available for each appl
 ### Troubleshooting checklist
 
 - Resource missing? Visit `https://<ha-host>/hacsfiles/HomeAssistantLGThinkQCards/homeassistant-lg-thinq-cards.js`—you should see the bundle source.
-- Still cached? Append `?v=0.3.0` to the resource URL or hard-reload the browser.
+- Still cached? Append `?v=0.3.1` to the resource URL or hard-reload the browser.
 - Wrong entity match? Pass `appliance: washer` (etc.) or override specific sensors under `entities:`.
 
 ## Features in depth
